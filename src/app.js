@@ -1,18 +1,7 @@
-import dotenv from "dotenv"
-dotenv.config()
-import express from 'express';
+import server from './server'
 
-const server = express();
-
-server.use(express.json());
-server.use(express.urlencoded({ extended: true }));
-
-server.get('*', (req, res) => res.status(200).send({ message: 'welcome to Abudanza' }));
-
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT 
 
 server.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
 });
-
-module.exports = server;

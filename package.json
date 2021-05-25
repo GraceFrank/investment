@@ -9,7 +9,9 @@
     "startdev": "nodemon --exec babel-node ./src/app.js",
     "lint": "./node_modules/.bin/eslint ./src",
     "pretty": "prettier --write '**/*.{js,json}' '!node_modules/**'",
-    "postpretty": "yarn lint --fix"
+    "postpretty": "yarn lint --fix",
+    "pretest": "cross-env NODE_ENV=test",
+    "test": "jest --coverage"
   },
   "dependencies": {
     "dotenv": "^10.0.0",
@@ -24,9 +26,11 @@
     "@babel/preset-env": "^7.14.2",
     "@babel/register": "^7.13.16",
     "@babel/runtime": "^7.14.0",
+    "cross-env": "^7.0.3",
     "eslint": "^7.27.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.23.3",
-    "prettier": "^2.3.0"
+    "prettier": "^2.3.0",
+    "supertest": "^6.1.3"
   }
 }
