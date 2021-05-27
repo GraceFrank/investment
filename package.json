@@ -6,7 +6,7 @@
   "scripts": {
     "prestart": "babel ./src --out-dir build",
     "start": "node ./build/app.js",
-    "startdev": "nodemon --exec babel-node ./src/app.js",
+    "startdev": "yarn pretty && nodemon --exec babel-node ./src/app.js",
     "lint": "./node_modules/.bin/eslint ./src",
     "pretty": "prettier --write '**/*.{js,json}' '!node_modules/**'",
     "postpretty": "yarn lint --fix",
@@ -14,8 +14,12 @@
     "test": "jest --coverage"
   },
   "dependencies": {
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "helmet": "^4.6.0",
+    "mongoose": "^5.12.11",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
