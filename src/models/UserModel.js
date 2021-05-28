@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
-import nanoId from 'nanoid';
+import {nanoid} from 'nanoid';
 import jwt from 'jsonwebtoken';
 
 const userSchema = new mongoose.Schema(
@@ -69,9 +69,9 @@ userSchema.methods.validatePassword = async function (providedPassword) {
 };
 
 // generate account Id before saving
-userSchema.pre('save', function (next) {
-  if (!this.isModified('account_id')) return next();
-  this.account_id = nanoId(6);
+userSchema.pre('validate', function (next) {
+  if (this.account_id) return next();
+  this.account_id = nanoid(6);
   return next();
 });
 
