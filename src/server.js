@@ -1,15 +1,47 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
+import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
+import mongoSanitize from 'express-mongo-sanitize';
+import xss from 'xss-clean';
+import hpp from 'hpp';
+
+import globalErrHandler from './controllers/errorController';
+import AppError from './utils/appError';
 
 dotenv.config();
-
 const server = express();
+// Set security HTTP headers
+server.use(helmet());
+
+// Limit request from the same API
+const limiter = rateLimit({
+  max: 150,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too Many Request from this IP, please try again in an hour',
+});
+server.use('/api', limiter);
 
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 server.use(cors());
 
-server.get('*', (req, res) => res.status(200).send({ message: 'welcome to Abudanza' }));
+// Data sanitization against Nosql query injection
+server.use(mongoSanitize());
+
+// Data sanitization against XSS(clean user input from malicious HTML code)
+server.use(xss());
+
+// Prevent parameter pollution
+server.use(hpp());
+
+// handle undefined Routes
+server.use('*', (req, res, next) => {
+  const err = new AppError(404, 'fail', 'undefined route');
+  next(err, req, res, next);
+});
+
+server.use(globalErrHandler);
 
 export default server;

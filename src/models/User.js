@@ -29,13 +29,14 @@ const userSchema = new mongoose.Schema(
     },
     password: { type: String, require: true, maxlength: 255 },
     account_id: {
-      type: String, required: true, maxlength: 45, unique: true
-    },
-    role: {
-      type: mongoose.Types.ObjectId,
-      ref: 'roles',
+      type: String,
       required: true,
+      maxlength: 45,
+      unique: true,
     },
+    type: String,
+    enum: [ 'superAdmin', 'admin', 'user' ],
+    default: 'user',
     isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true }
@@ -57,7 +58,7 @@ userSchema.methods.validatePassword = async function (providedPassword) {
 
 // generate account Id before saving
 userSchema.pre('save', function (next) {
-  if(this.account_id) return next();
+  if (!this.isModified('account_id')) return next();
   this.account_id = nanoId(6);
   return next();
 });
