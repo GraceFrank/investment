@@ -57,6 +57,7 @@ userSchema.methods.validatePassword = async function (providedPassword) {
 
 // generate account Id before saving
 userSchema.pre('save', function (next) {
+  if(this.account_id) return next();
   this.account_id = nanoId(6);
   return next();
 });
