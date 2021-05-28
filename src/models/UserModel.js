@@ -27,6 +27,12 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
     },
+    phone: {
+      type: String,
+      required: true,
+      unique: true,
+      maxlength: 20,
+    },
     password: { type: String, require: true, maxlength: 255 },
     account_id: {
       type: String,
@@ -34,10 +40,16 @@ const userSchema = new mongoose.Schema(
       maxlength: 45,
       unique: true,
     },
-    type: String,
-    enum: [ 'superAdmin', 'admin', 'user' ],
-    default: 'user',
+
+    role: {
+      type: String,
+      enum: [ 'superAdmin', 'admin', 'user' ],
+      default: 'user',
+    },
+
     isDeleted: { type: Boolean, default: false },
+    verified_phone: { type: Boolean, default: false },
+    verified_email: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

@@ -6,9 +6,11 @@ import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
 import xss from 'xss-clean';
 import hpp from 'hpp';
+import logger from 'morgan';
 
 import globalErrHandler from './controllers/errorController';
 import AppError from './utils/appError';
+import rootRouter from './routes';
 
 dotenv.config();
 const server = express();
@@ -22,10 +24,10 @@ const limiter = rateLimit({
   message: 'Too Many Request from this IP, please try again in an hour',
 });
 server.use('/api', limiter);
-
-server.use(express.json());
+server.use(logger('dev'));
 server.use(express.urlencoded({ extended: true }));
 server.use(cors());
+server.use(express.json());
 
 // Data sanitization against Nosql query injection
 server.use(mongoSanitize());
@@ -36,6 +38,7 @@ server.use(xss());
 // Prevent parameter pollution
 server.use(hpp());
 
+server.use('/api/v1', rootRouter);
 // handle undefined Routes
 server.use('*', (req, res, next) => {
   const err = new AppError(404, 'fail', 'undefined route');
