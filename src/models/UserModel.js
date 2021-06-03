@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
-import {nanoid} from 'nanoid';
+import { nanoid } from 'nanoid';
 import jwt from 'jsonwebtoken';
 
 const userSchema = new mongoose.Schema(
@@ -56,11 +56,13 @@ const userSchema = new mongoose.Schema(
 
 userSchema.methods.generateToken = function () {
   const secret = process.env.PRIVATE_KEY;
-  return jwt.sign({
-    secret,
-    exp: Math.floor(Date.now() / 1000) + 60 * 60,
-    data: { account_id: this.account_id, role: this.role },
-  });
+  return jwt.sign(
+    {
+      exp: Math.floor(Date.now() / 1000) + 60 * 60,
+      data: { account_id: this.account_id, role: this.role },
+    },
+    secret
+  );
 };
 
 userSchema.methods.validatePassword = async function (providedPassword) {

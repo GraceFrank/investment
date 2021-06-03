@@ -5,7 +5,7 @@ import { login, register } from '../controllers/authController';
 
 const router = express.Router();
 
-router.post('/login', login);
 router.post('/register', validationMiddleware(signupSchema), register);
+router.post('/login', login);
 
 export default router;
