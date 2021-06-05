@@ -1,11 +1,16 @@
 import express from 'express';
 import validationMiddleware from '../middlewares/validationMiddleware';
-import { signupSchema } from '../validations/authValidation';
+import {
+  signupSchema,
+  loginSchema,
+  verificationSchema,
+  sendVerificationSchema,
+} from '../validations/authValidation';
 import { login, register } from '../controllers/authController';
 
 const router = express.Router();
 
 router.post('/register', validationMiddleware(signupSchema), register);
-router.post('/login', login);
+router.post('/login', validationMiddleware(loginSchema), login);
 
 export default router;

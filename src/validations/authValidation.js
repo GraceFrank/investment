@@ -6,5 +6,23 @@ export const signupSchema = Joi.object({
   phone: Joi.string().max(20).min(4).required(),
   firstName: Joi.string().required().min(1).max(255),
   lastName: Joi.string().required().min(1).max(255),
-  password: Joi.string().required().pattern(new RegExp('^[a-zA-Z0-9]{8,30}$')),
+  password: Joi.string()
+    .required()
+    .max(255)
+    .pattern(new RegExp('^[a-zA-Z0-9]{8,30}$')),
+});
+
+export const loginSchema = Joi.object({
+  email: Joi.string().email().required().min(5)
+    .max(255),
+  password: Joi.string().required().max(255),
+});
+
+export const verificationSchema = Joi.object({
+  token: Joi.string().required().min(5).max(500),
+});
+
+export const sendVerificationSchema = Joi.object({
+  token: Joi.string().email().required().min(5)
+    .max(500),
 });
