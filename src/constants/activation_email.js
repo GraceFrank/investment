@@ -247,6 +247,7 @@ const generateConfirmationEmail = (
                         "
                         valign="top"
                       >
+                        <image src="https://abudanza.africa/logo.png" alt="logo"/>
                         <h1>Welcome to Abudanza</h1>
                         Hi ${firstName} Thank you for Registering on Abudanza. Please
                         confirm your email address by clicking the link below.
@@ -354,7 +355,8 @@ const generateConfirmationEmail = (
                         "
                         valign="top"
                       >
-                        &mdash; Abudanza Support
+                        <p>&mdash; Thanks! Support</p>
+                        <p>&mdash; Abudanza Support</p>
                       </td>
                     </tr>
                   </table>
