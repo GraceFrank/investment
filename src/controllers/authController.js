@@ -11,7 +11,7 @@ export const login = async (req, res, next) => {
     if (!user) return res.status(400).send('invalid login credentials');
 
     // validate password
-    const isValidPassword = await user.validatePassword(password)
+    const isValidPassword = await user.validatePassword(password);
     if (!isValidPassword) return res.status(400).send('invalid login credentials');
 
     user.token = user.generateToken();
