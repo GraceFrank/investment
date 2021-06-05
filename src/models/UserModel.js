@@ -54,14 +54,18 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-userSchema.methods.generateToken = function ({ expires, data }) {
+userSchema.methods.generateToken = function (details) {
   const secret = process.env.PRIVATE_KEY;
+  const payload = details
+    ? details.data
+    : { account_id: this.account_id, role: this.role };
+  const expiresIn = details ? details.expires : '2d';
   return jwt.sign(
     {
-      data: data || { account_id: this.account_id, role: this.role },
+      payload,
     },
     secret,
-    { expiresIn: expires || '2d' }
+    { expiresIn }
   );
 };
 

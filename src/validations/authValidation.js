@@ -23,6 +23,6 @@ export const verificationSchema = Joi.object({
 });
 
 export const sendVerificationSchema = Joi.object({
-  token: Joi.string().email().required().min(5)
+  email: Joi.string().email().required().min(5)
     .max(500),
 });

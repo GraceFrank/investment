@@ -1,6 +1,10 @@
 import _ from 'lodash';
+import jwt from 'jsonwebtoken';
 import UserModel from '../models/UserModel';
 import AppError from '../utils/appError';
+import { sendActivationMail } from '../utils/mailer';
+
+const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 export const login = async (req, res, next) => {
   try {
@@ -58,9 +62,23 @@ export const register = async (req, res, next) => {
       first_name: firstName,
       last_name: lastName,
     });
+
+    const confirmationToken = newUser.generateToken({
+      data: newUser.email,
+      expires: '24h',
+    });
+
+    const confirmationUrl = `${process.env.UI_BASE_URL}/verification/?confirmation_token=${confirmationToken}`;
+    sendActivationMail({
+      name: newUser.first_name,
+      email: newUser.email,
+      confirmationUrl,
+    });
+
     return res.status(201).send({
       statusCode: 201,
       status: 'created',
+      confirmationUrl,
       payload: _.pick(newUser, [
         'first_name',
         'last_name',
@@ -73,3 +91,76 @@ export const register = async (req, res, next) => {
     return next(err, req, res, next);
   }
 };
+
+export const sendVerificationEmail = async (req, res, next) => {
+  const { email } = req.body;
+  try {
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      return res.status(200).send({
+        statusCode: 200,
+        status: 'success',
+        message: 'email sent',
+      });
+    }
+    if (user.verified_email) {
+      return res.status(400).send({
+        statusCode: 400,
+        status: 'fail',
+        message: 'Email already verified',
+      });
+    }
+
+    const confirmationToken = user.generateToken({
+      data: user.email,
+      expires: '24h',
+    });
+
+    const confirmationUrl = `${process.env.UI_BASE_URL}/verification/?confirmation_token=${confirmationToken}`;
+    sendActivationMail({
+      name: user.first_name,
+      email: user.email,
+      confirmationUrl,
+    });
+    return res.status(200).send({
+      confirmationUrl,
+      statusCode: 200,
+      status: 'success',
+      message: 'email sent',
+    });
+  } catch (err) {
+    const error = new AppError();
+    return next(error, req, res, next);
+  }
+};
+
+export const validateConfirmationToken = async (req, res, next) => {
+  const { token } = req.body;
+
+  try {
+    const {data} = jwt.verify(token, PRIVATE_KEY);
+
+    const user = await UserModel.findOneAndUpdate(
+      { email: data },
+      { verified_email: true }
+    );
+    if (!user) throw new Error('user does not exist');
+
+    
+    return res.status(200).send({
+      statusCode: 200,
+      status: 'success',
+      message: 'account verified',
+    });
+  } catch (err) {
+    const error = new AppError(
+      400,
+      'fail',
+      'Invalid or Expired Confrimation Link'
+    );
+    return next(error, req, res, next);
+  }
+};
+
+//Todo! Forgot Password
+//Toddo! send email after confirmation
