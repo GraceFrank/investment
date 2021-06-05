@@ -54,14 +54,14 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-userSchema.methods.generateToken = function () {
+userSchema.methods.generateToken = function ({ expires, data }) {
   const secret = process.env.PRIVATE_KEY;
   return jwt.sign(
     {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: { account_id: this.account_id, role: this.role },
+      data: data || { account_id: this.account_id, role: this.role },
     },
-    secret
+    secret,
+    { expiresIn: expires || '2d' }
   );
 };
 
