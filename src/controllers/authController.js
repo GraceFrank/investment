@@ -4,7 +4,7 @@ import UserModel from '../models/UserModel';
 import AppError from '../utils/appError';
 import { sendActivationMail } from '../utils/mailer';
 
-const PRIVATE_KEY = process.env.PRIVATE_KEY;
+const { PRIVATE_KEY } = process.env;
 
 export const login = async (req, res, next) => {
   try {
@@ -138,7 +138,7 @@ export const validateConfirmationToken = async (req, res, next) => {
   const { token } = req.body;
 
   try {
-    const {data} = jwt.verify(token, PRIVATE_KEY);
+    const { data } = jwt.verify(token, PRIVATE_KEY);
 
     const user = await UserModel.findOneAndUpdate(
       { email: data },
@@ -146,7 +146,6 @@ export const validateConfirmationToken = async (req, res, next) => {
     );
     if (!user) throw new Error('user does not exist');
 
-    
     return res.status(200).send({
       statusCode: 200,
       status: 'success',
@@ -162,5 +161,5 @@ export const validateConfirmationToken = async (req, res, next) => {
   }
 };
 
-//Todo! Forgot Password
-//Toddo! send email after confirmation
+// Todo! Forgot Password
+// Toddo! send email after confirmation
