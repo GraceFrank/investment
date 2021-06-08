@@ -2,7 +2,7 @@ import _ from 'lodash';
 import jwt from 'jsonwebtoken';
 import UserModel from '../models/UserModel';
 import AppError from '../utils/appError';
-import { sendActivationMail } from '../utils/mailer';
+import { sendActivationMail, sendEmailConfirmedMail } from '../utils/mailer';
 
 const { PRIVATE_KEY } = process.env;
 
@@ -16,7 +16,10 @@ export const login = async (req, res, next) => {
 
     // validate password
     const isValidPassword = await user.validatePassword(password);
-    if (!isValidPassword) return res.status(400).send('invalid login credentials');
+    if (!isValidPassword) return res.status(400).send({message: 'invalid login credentials'});
+
+    // check that user has verified email
+    if (!user.verified_email) return res.status(401).send({message: 'You need to verify your Email to login'});
 
     user.token = user.generateToken();
     return res.status(200).send({
@@ -146,6 +149,7 @@ export const validateConfirmationToken = async (req, res, next) => {
     );
     if (!user) throw new Error('user does not exist');
 
+    sendEmailConfirmedMail();
     return res.status(200).send({
       statusCode: 200,
       status: 'success',

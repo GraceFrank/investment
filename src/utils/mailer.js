@@ -24,11 +24,13 @@ export const sendActivationMail = ({ name, email, confirmationUrl }) => {
 };
 
 export const sendEmailConfirmedMail = ({ name, email }) => {
+  const UiLoginUrl = `${process.env.UI_BASE_URL}/login/`;
   const data = {
     from: 'Abudanza <support@mg.abudanza.africa>',
     to: email,
     subject: 'Confirm Your Email',
     text: `Congratulation ${name}, your account has been`,
+    html: generateConfirmationEmail(name, UiLoginUrl),
   };
 
   return mailer.messages().send(data, (error, body) => {
