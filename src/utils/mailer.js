@@ -29,7 +29,7 @@ export const sendEmailConfirmedMail = ({ name, email }) => {
   const data = {
     from: 'Abudanza <support@mg.abudanza.africa>',
     to: email,
-    subject: 'Confirm Your Email',
+    subject: 'Abudanza Account Activated',
     text: `Congratulation ${name}, your account has been`,
     html: generateEmailConfirmedMail(name, UiLoginUrl),
   };
