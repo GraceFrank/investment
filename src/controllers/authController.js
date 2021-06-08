@@ -25,17 +25,14 @@ export const login = async (req, res, next) => {
         .send({ message: 'You need to verify your Email to login' });
     }
 
-    user.token = user.generateToken();
+    const token = user.generateToken();
     return res.status(200).send({
       status: 'success',
-      payload: _.pick(user, [
-        'first_name',
-        'last_name',
-        'email',
-        'phone',
-        'account_id',
-        'token',
-      ]),
+      payload: {
+        firstName: user.first_name,
+        token,
+        accountId: user.account_id,
+      },
     });
   } catch (err) {
     return next(err, req, res, next);

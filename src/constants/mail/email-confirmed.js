@@ -373,6 +373,7 @@ const generateEmailConfirmedMail = (firstName, UiLoginUrl) => `<!DOCTYPE html>
                         valign="top"
                       >
                         Thanks for joining Abudanza.
+                        <br/>
                         <image src="https://abudanza.africa/logo.png" alt="logo"/>
                       </td>
                   </table>
