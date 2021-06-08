@@ -18,10 +18,12 @@ export const loginSchema = Joi.object({
   password: Joi.string().required().max(255),
 });
 
+// Validation ensure that token was provided for email confirmation
 export const verificationSchema = Joi.object({
   token: Joi.string().required().min(5).max(500),
 });
 
+// ensure that email to resend confirmation token to is valid
 export const sendVerificationSchema = Joi.object({
   email: Joi.string().email().required().min(5)
     .max(500),

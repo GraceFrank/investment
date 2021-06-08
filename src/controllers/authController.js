@@ -16,10 +16,14 @@ export const login = async (req, res, next) => {
 
     // validate password
     const isValidPassword = await user.validatePassword(password);
-    if (!isValidPassword) return res.status(400).send({message: 'invalid login credentials'});
+    if (!isValidPassword) return res.status(400).send({ message: 'invalid login credentials' });
 
     // check that user has verified email
-    if (!user.verified_email) return res.status(401).send({message: 'You need to verify your Email to login'});
+    if (!user.verified_email) {
+      return res
+        .status(401)
+        .send({ message: 'You need to verify your Email to login' });
+    }
 
     user.token = user.generateToken();
     return res.status(200).send({
