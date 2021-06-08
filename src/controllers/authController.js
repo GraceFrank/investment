@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { capitalize } from 'lodash';
 import jwt from 'jsonwebtoken';
 import UserModel from '../models/UserModel';
 import AppError from '../utils/appError';
@@ -77,7 +77,7 @@ export const register = async (req, res, next) => {
 
     const confirmationUrl = `${process.env.UI_BASE_URL}/verification/?confirmation_token=${confirmationToken}`;
     sendActivationMail({
-      name: newUser.first_name,
+      name: capitalize(newUser.first_name),
       email: newUser.email,
       confirmationUrl,
     });
@@ -125,7 +125,7 @@ export const sendVerificationEmail = async (req, res, next) => {
 
     const confirmationUrl = `${process.env.UI_BASE_URL}/verification/?confirmation_token=${confirmationToken}`;
     sendActivationMail({
-      name: user.first_name,
+      name: capitalize(user.first_name),
       email: user.email,
       confirmationUrl,
     });
@@ -145,15 +145,19 @@ export const validateConfirmationToken = async (req, res, next) => {
   const { token } = req.body;
 
   try {
-    const { data } = jwt.verify(token, PRIVATE_KEY);
+    const { payload } = jwt.verify(token, PRIVATE_KEY);
 
     const user = await UserModel.findOneAndUpdate(
-      { email: data },
+      { email: payload },
       { verified_email: true }
     );
     if (!user) throw new Error('user does not exist');
 
-    sendEmailConfirmedMail();
+    sendEmailConfirmedMail({
+      name: capitalize(user.first_name),
+      email: user.email,
+    });
+
     return res.status(200).send({
       statusCode: 200,
       status: 'success',

@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import Mailgun from 'mailgun-js';
 import generateConfirmationEmail from '../constants/mail/activation_email';
+import generateEmailConfirmedMail from '../constants/mail/email-confirmed';
 
 dotenv.config();
 
@@ -30,7 +31,7 @@ export const sendEmailConfirmedMail = ({ name, email }) => {
     to: email,
     subject: 'Confirm Your Email',
     text: `Congratulation ${name}, your account has been`,
-    html: generateConfirmationEmail(name, UiLoginUrl),
+    html: generateEmailConfirmedMail(name, UiLoginUrl),
   };
 
   return mailer.messages().send(data, (error, body) => {
