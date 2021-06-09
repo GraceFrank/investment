@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "prestart": "babel ./src --out-dir build",
+    "build": "babel ./src --out-dir build",
     "start": "node ./build/app.js",
     "startdev": "yarn pretty && nodemon --exec babel-node ./src/app.js",
     "lint": "./node_modules/.bin/eslint ./src",
