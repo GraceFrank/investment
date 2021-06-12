@@ -62,7 +62,7 @@ userSchema.methods.generateToken = function (details) {
   const expiresIn = details ? details.expires : '2d';
   return jwt.sign(
     {
-      payload,
+      ...payload,
     },
     secret,
     { expiresIn }

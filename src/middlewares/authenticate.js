@@ -6,10 +6,9 @@ export default function authenticateToken(req, res, next) {
   if (!authHeader) return res.status(401).send({ message: 'Auth Header not provided' });
 
   const token = authHeader.split(' ')[1];
-  jwt.verify(token, process.env.PRIVATE_KEY, (err, decoded) => {
+  return jwt.verify(token, process.env.PRIVATE_KEY, (err, decoded) => {
     if (err) return res.status(401).send({ message: 'Invalid token' });
-
     req.user = decoded;
-    next();
+    return next();
   });
 }

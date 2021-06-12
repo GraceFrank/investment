@@ -1,10 +1,7 @@
 import _, { capitalize } from 'lodash';
-import jwt from 'jsonwebtoken';
 import UserModel from '../models/UserModel';
 import AppError from '../utils/appError';
 import { sendActivationMail, sendEmailConfirmedMail } from '../utils/mailer';
-
-const { PRIVATE_KEY } = process.env;
 
 export const login = async (req, res, next) => {
   try {
@@ -68,7 +65,7 @@ export const register = async (req, res, next) => {
     });
 
     const confirmationToken = newUser.generateToken({
-      data: newUser.email,
+      data: { email: newUser.email },
       expires: '24h',
     });
 
@@ -116,7 +113,7 @@ export const sendVerificationEmail = async (req, res, next) => {
     }
 
     const confirmationToken = user.generateToken({
-      data: user.email,
+      data: { email: user.email },
       expires: '24h',
     });
 
@@ -139,13 +136,10 @@ export const sendVerificationEmail = async (req, res, next) => {
 };
 
 export const validateConfirmationToken = async (req, res, next) => {
-  const { token } = req.body;
-
+  const reqestUser = req.user;
   try {
-    const { payload } = jwt.verify(token, PRIVATE_KEY);
-
     const user = await UserModel.findOneAndUpdate(
-      { email: payload },
+      { email: reqestUser.email },
       { verified_email: true }
     );
     if (!user) throw new Error('user does not exist');
@@ -171,4 +165,15 @@ export const validateConfirmationToken = async (req, res, next) => {
 };
 
 // Todo! Forgot Password
-// Toddo! send email after confirmation
+// export const forgotPassword = async (req, res, next) => {
+//   // validate token
+//   // get email from token
+//   // validate password
+//   // find user
+//   // find user
+//   // if user doesnot exist throw error
+//   // if user exist
+//   // hash password
+//   // save password
+//   // send password changed
+// };

@@ -12,6 +12,7 @@ import {
   validateConfirmationToken,
   sendVerificationEmail,
 } from '../controllers/authController';
+import authenticateToken from '../middlewares/authenticate';
 
 const router = express.Router();
 
@@ -19,6 +20,7 @@ router.post('/register', validationMiddleware(signupSchema), register);
 router.post('/login', validationMiddleware(loginSchema), login);
 router.post(
   '/verify',
+  authenticateToken,
   validationMiddleware(verificationSchema),
   validateConfirmationToken
 );
