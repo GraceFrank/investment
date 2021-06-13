@@ -69,7 +69,7 @@ userSchema.methods.generateToken = function (details) {
       ...payload,
     },
     secret,
-    { expiresIn 
+    { expiresIn }
   );
 };
 
