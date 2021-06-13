@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import UserModel from '../models/UserModel';
 
 export default function authenticateToken(req, res, next) {
   const authHeader = req.headers.authorization;
@@ -6,9 +7,10 @@ export default function authenticateToken(req, res, next) {
   if (!authHeader) return res.status(401).send({ message: 'Auth Header not provided' });
 
   const token = authHeader.split(' ')[1];
-  return jwt.verify(token, process.env.PRIVATE_KEY, (err, decoded) => {
+  return jwt.verify(token, process.env.PRIVATE_KEY, async (err, decoded) => {
     if (err) return res.status(401).send({ message: 'Invalid token' });
-    req.user = decoded;
+    const user = await UserModel.findOne({ email: decoded.email });
+    req.user = user;
     return next();
   });
 }
