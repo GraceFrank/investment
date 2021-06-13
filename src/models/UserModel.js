@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema(
       minlength: 1,
       maxlength: 255,
       lowercase: true,
+      trim: true,
     },
     last_name: {
       type: String,
@@ -18,6 +19,7 @@ const userSchema = new mongoose.Schema(
       minlength: 1,
       maxlength: 255,
       lowercase: true,
+      trim: true,
     },
     email: {
       type: String,
@@ -26,12 +28,14 @@ const userSchema = new mongoose.Schema(
       maxlength: 255,
       unique: true,
       lowercase: true,
+      trim: true,
     },
     phone: {
       type: String,
       required: true,
       unique: true,
       maxlength: 20,
+      trim: true,
     },
     password: { type: String, require: true, maxlength: 255 },
     account_id: {
@@ -43,8 +47,8 @@ const userSchema = new mongoose.Schema(
 
     role: {
       type: String,
-      enum: [ 'superAdmin', 'admin', 'user' ],
-      default: 'user',
+      enum: ["superAdmin", "admin", "user"],
+      default: "user",
     },
 
     isDeleted: { type: Boolean, default: false },
@@ -65,7 +69,7 @@ userSchema.methods.generateToken = function (details) {
       ...payload,
     },
     secret,
-    { expiresIn }
+    { expiresIn 
   );
 };
 
