@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-export const signupSchema = Joi.object({
+export const profileSchema = Joi.object({
   title: Joi.string().valid('Mr', 'Mrs', 'Miss', 'Mr').required(),
   birthday: Joi.date().less('now').required(),
   nationality: Joi.string().required().min(1).max(255),
