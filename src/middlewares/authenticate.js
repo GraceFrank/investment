@@ -9,8 +9,14 @@ export default function authenticateToken(req, res, next) {
   const token = authHeader.split(' ')[1];
   return jwt.verify(token, process.env.PRIVATE_KEY, async (err, decoded) => {
     if (err) return res.status(401).send({ message: 'Invalid token' });
-    const user = await UserModel.findOne({ email: decoded.email });
-    req.user = user;
-    return next();
+
+    try {
+      const user = await UserModel.findOne({ email: decoded.email });
+
+      req.user = user;
+      return next();
+    } catch (error) {
+      return res.status(500).send({ message: 'Errror Validating token' });
+    }
   });
 }
