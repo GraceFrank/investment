@@ -36,9 +36,16 @@ const profileSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      enum: [ 'Mr', 'Mrs', 'Miss', 'Mr' ],
+      enum: [ 'Mr', 'Mrs', 'Miss', 'Ms' ],
       default: 'Mr',
     },
+
+    marital_status: {
+      type: String,
+      enum: [ 'single', 'married', 'widowed', 'divorced', 'separated' ],
+      default: 'single',
+    },
+
     birthday: {
       type: Date,
       required: true,

@@ -13,6 +13,7 @@ function profileDTO(profile) {
     'id_card_url',
     'photo_url',
     'address',
+    'marital_status',
   ]);
 }
 

@@ -1,7 +1,11 @@
 import Joi from 'joi';
 
 export const profileSchema = Joi.object({
-  title: Joi.string().valid('Mr', 'Mrs', 'Miss', 'Mr').required(),
+  title: Joi.string().valid('Mr', 'Mrs', 'Miss', 'Ms').required(),
+  marital_status: Joi.string()
+    .valid('single', 'married', 'widowed', 'divorced', 'separated')
+    .required(),
+
   birthday: Joi.date().less('now').required(),
   nationality: Joi.string().required().min(1).max(255),
   mothers_maiden_name: Joi.string().required().min(1).max(255),

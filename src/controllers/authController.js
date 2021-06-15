@@ -9,11 +9,11 @@ export const login = async (req, res, next) => {
 
     // check if user exists
     const user = await UserModel.findOne({ email });
-    if (!user) return res.status(400).send('invalid login credentials');
+    if (!user) return res.status(400).send({ message: 'Incorrect Email or Password' });
 
     // validate password
     const isValidPassword = await user.validatePassword(password);
-    if (!isValidPassword) return res.status(400).send({ message: 'invalid login credentials' });
+    if (!isValidPassword) return res.status(400).send({ message: 'Incorrect email or password' });
 
     // check that user has verified email
     if (!user.verified_email) {
