@@ -1,6 +1,6 @@
 import express from 'express';
 import validationMiddleware from '../middlewares/validationMiddleware';
-import { bankDetailsSchema } from '../validations/bankDetailsValidation';
+import { bankDetailsSchema } from '../validations/bankDetailsValidations';
 import {
   getBankDetails,
   createBankDetails,
