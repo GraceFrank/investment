@@ -18,6 +18,7 @@ const addressSchema = new mongoose.Schema({
     trim: true,
     maxlength: 255,
   },
+
   state: {
     type: String,
     required: true,

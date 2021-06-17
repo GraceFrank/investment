@@ -27,6 +27,9 @@ export const login = async (req, res, next) => {
       status: 'success',
       payload: {
         firstName: user.first_name,
+        lastName: user.last_name,
+        email: user.email,
+        phone: user.phone,
         token,
         accountId: user.account_id,
       },
