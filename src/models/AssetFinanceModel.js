@@ -25,12 +25,15 @@ const AssetFinanceSchema = new mongoose.Schema(
     amount: {
       type: Number,
       required: true,
+      min: 10000,
+      max: 10000000,
     },
 
     status: {
       type: String,
       enum: [ 'active', 'pending', 'completed' ],
       required: 'true',
+      default: 'pending',
     },
 
     vendor_name: {
@@ -56,6 +59,16 @@ const AssetFinanceSchema = new mongoose.Schema(
     },
 
     vendor_address: addressSchema,
+
+    duration: {
+      type: Number,
+      default: 90,
+      required: true,
+    },
+
+    activation_date: {
+      type: Date,
+    },
 
     user: {
       type: mongoose.Types.ObjectId,
