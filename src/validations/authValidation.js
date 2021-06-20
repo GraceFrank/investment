@@ -28,3 +28,7 @@ export const sendVerificationSchema = Joi.object({
   email: Joi.string().email().required().min(5)
     .max(500),
 });
+
+export const changePasswordSchema = Joi.object({
+  password: Joi.string().required().max(255),
+});
