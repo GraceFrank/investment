@@ -180,3 +180,40 @@ export const validateConfirmationToken = async (req, res, next) => {
 //   // save password
 //   // send password changed
 // };
+export const forgotPassword = async (req, res, next) => {
+  const { email } = req.body;
+  const user = await UserModel.findOne({ email });
+  if (!user) {
+    const error = new AppError(404, 'fail', 'Error Upating Password');
+    return next(error, req, res, next);
+  }
+
+  // Todo Generate token
+  // Send password reset email to user
+  // send Response
+  return res.status(200).send({
+    statusCode: 200,
+    status: 'success',
+    message: 'Password Reset Email sent',
+  });
+};
+
+export const updatePassword = async (req, res, next) => {
+  const { _id } = req.user;
+  try {
+    const updatedUser = await UserModel.updateOne({ _id }, req.body);
+
+    if (!updatedUser) {
+      const error = new AppError(404, 'fail', 'Error Upating Password');
+      return next(error, req, res, next);
+    }
+
+    return res.status(200).send({
+      statusCode: 200,
+      status: 'success',
+      message: 'password updated',
+    });
+  } catch (err) {
+    return next(err, req, res, next);
+  }
+};

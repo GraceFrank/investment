@@ -30,4 +30,4 @@ export const profileSchema = Joi.object({
     country: Joi.string().required().min(1).max(255)
       .trim(),
   }),
-});
+}).required();

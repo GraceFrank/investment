@@ -5,6 +5,7 @@ import {
   loginSchema,
   verificationSchema,
   sendVerificationSchema,
+  changePasswordSchema,
 } from '../validations/authValidation';
 import {
   login,
@@ -28,6 +29,12 @@ router.post(
   '/send-verification',
   validationMiddleware(sendVerificationSchema),
   sendVerificationEmail
+);
+router.put(
+  '/change-password',
+  authenticateToken,
+  validationMiddleware(changePasswordSchema),
+  validateConfirmationToken
 );
 
 export default router;

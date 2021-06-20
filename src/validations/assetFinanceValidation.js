@@ -7,11 +7,6 @@ export const assetFinanceSchema = Joi.object({
     .trim(),
   brand: Joi.string().required().min(1).max(255),
   amount: Joi.number().required().min(10000).max(10000000),
-  status: Joi.string()
-    .valid('active', 'pending', 'completed')
-    .required()
-    .default('pending'),
-
   vendor_name: Joi.string().required().min(1).max(255),
   vendor_email: Joi.string().min(1).max(255).email(),
   vendor_phone: Joi.string()
@@ -29,5 +24,5 @@ export const assetFinanceSchema = Joi.object({
       .trim(),
     country: Joi.string().required().min(1).max(255)
       .trim(),
-  }),
+  }).required(),
 });
