@@ -1,4 +1,4 @@
-const generateEmailConfirmedMail = (firstName, UiLoginUrl) => `<!DOCTYPE html>
+<!DOCTYPE html>
 <html
   style="
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -260,7 +260,7 @@ const generateEmailConfirmedMail = (firstName, UiLoginUrl) => `<!DOCTYPE html>
                         valign="top"
                       >
                        <p>
-                          Hi ${firstName},
+                          Hi {{firstName}},
                       </p>
                         <strong
                           style="
@@ -324,7 +324,7 @@ const generateEmailConfirmedMail = (firstName, UiLoginUrl) => `<!DOCTYPE html>
                         valign="top"
                       >
                         <a
-                          href=${UiLoginUrl}
+                          href={{loginUrl}}
                           class="btn-primary"
                           style="
                             font-family: 'Helvetica Neue', Helvetica, Arial,
@@ -460,6 +460,4 @@ const generateEmailConfirmedMail = (firstName, UiLoginUrl) => `<!DOCTYPE html>
     </table>
   </body>
 </html>
-`;
 
-export default generateEmailConfirmedMail;
