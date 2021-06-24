@@ -9,7 +9,11 @@ export const signupSchema = Joi.object({
   password: Joi.string()
     .required()
     .max(255)
-    .pattern(new RegExp('^[a-zA-Z0-9]{8,30}$')),
+    .pattern(new RegExp('(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}'))
+    .messages({
+      'string.pattern':
+        '"password" must contain a number, a string and be at least 8 characters',
+    }),
 });
 
 export const loginSchema = Joi.object({
@@ -18,17 +22,19 @@ export const loginSchema = Joi.object({
   password: Joi.string().required().max(255),
 });
 
-// Validation ensure that token was provided for email confirmation
-export const verificationSchema = Joi.object({
-  token: Joi.string().required().min(5).max(500),
-});
-
 // ensure that email to resend confirmation token to is valid
-export const sendVerificationSchema = Joi.object({
+export const sendMailSchema = Joi.object({
   email: Joi.string().email().required().min(5)
     .max(500),
 });
 
 export const changePasswordSchema = Joi.object({
-  password: Joi.string().required().max(255),
+  password: Joi.string()
+    .required()
+    .max(255)
+    .pattern(new RegExp('(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}'))
+    .messages({
+      'string.pattern':
+        '"password" must contain a number, a string and be at least 8 characters',
+    }),
 });

@@ -3,8 +3,7 @@ import validationMiddleware from '../middlewares/validationMiddleware';
 import {
   signupSchema,
   loginSchema,
-  verificationSchema,
-  sendVerificationSchema,
+  sendMailSchema,
   changePasswordSchema,
 } from '../validations/authValidation';
 import {
@@ -19,15 +18,10 @@ const router = express.Router();
 
 router.post('/register', validationMiddleware(signupSchema), register);
 router.post('/login', validationMiddleware(loginSchema), login);
-router.post(
-  '/verify',
-  authenticateToken,
-  validationMiddleware(verificationSchema),
-  validateConfirmationToken
-);
+router.post('/verify', authenticateToken, validateConfirmationToken);
 router.post(
   '/send-verification',
-  validationMiddleware(sendVerificationSchema),
+  validationMiddleware(sendMailSchema),
   sendVerificationEmail
 );
 router.put(

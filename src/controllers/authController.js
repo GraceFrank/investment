@@ -1,7 +1,11 @@
 import _, { capitalize } from 'lodash';
 import UserModel from '../models/UserModel';
 import AppError from '../utils/appError';
-import { sendActivationMail, sendEmailConfirmedMail } from '../utils/mailer';
+import {
+  sendActivationMail,
+  sendEmailConfirmedMail,
+  sendPasswordResetEmail,
+} from '../utils/mailer';
 
 export const login = async (req, res, next) => {
   try {
@@ -67,22 +71,20 @@ export const register = async (req, res, next) => {
       last_name: lastName,
     });
 
-    const confirmationToken = newUser.generateToken({
+    const token = newUser.generateToken({
       data: { email: newUser.email },
       expires: '24h',
     });
 
-    const confirmationUrl = `${process.env.UI_BASE_URL}/verification/?confirmation_token=${confirmationToken}`;
     sendActivationMail({
       name: capitalize(newUser.first_name),
       email: newUser.email,
-      confirmationUrl,
+      token,
     });
 
     return res.status(201).send({
       statusCode: 201,
       status: 'created',
-      confirmationUrl,
       payload: _.pick(newUser, [
         'first_name',
         'last_name',
@@ -115,19 +117,17 @@ export const sendVerificationEmail = async (req, res, next) => {
       });
     }
 
-    const confirmationToken = user.generateToken({
+    const token = user.generateToken({
       data: { email: user.email },
       expires: '24h',
     });
 
-    const confirmationUrl = `${process.env.UI_BASE_URL}/verification/?confirmation_token=${confirmationToken}`;
     sendActivationMail({
       name: capitalize(user.first_name),
       email: user.email,
-      confirmationUrl,
+      token,
     });
     return res.status(200).send({
-      confirmationUrl,
       statusCode: 200,
       status: 'success',
       message: 'email sent',
@@ -167,35 +167,27 @@ export const validateConfirmationToken = async (req, res, next) => {
   }
 };
 
-// Todo! Forgot Password
-// export const forgotPassword = async (req, res, next) => {
-//   // validate token
-//   // get email from token
-//   // validate password
-//   // find user
-//   // find user
-//   // if user doesnot exist throw error
-//   // if user exist
-//   // hash password
-//   // save password
-//   // send password changed
-// };
-export const forgotPassword = async (req, res, next) => {
-  const { email } = req.body;
-  const user = await UserModel.findOne({ email });
-  if (!user) {
-    const error = new AppError(404, 'fail', 'Error Upating Password');
-    return next(error, req, res, next);
+export const requestPasswordReset = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const user = await UserModel.findOne({ email });
+    const successResponse = {
+      statusCode: 200,
+      status: 'success',
+      message: 'Password Request  sent',
+    };
+    if (!email) {
+      return res.status(200).send(successResponse);
+    }
+    const token = user.generateToken({
+      data: { email: user.email },
+      expires: '24h',
+    });
+    sendPasswordResetEmail({ email, token });
+    return res.status(200).send(successResponse);
+  } catch (err) {
+    return next(err, req, res, next);
   }
-
-  // Todo Generate token
-  // Send password reset email to user
-  // send Response
-  return res.status(200).send({
-    statusCode: 200,
-    status: 'success',
-    message: 'Password Reset Email sent',
-  });
 };
 
 export const updatePassword = async (req, res, next) => {
