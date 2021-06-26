@@ -1,3 +1,4 @@
+import { query } from 'express';
 import AssetFinanceModel from '../models/AssetFinanceModel';
 import cloudinary from '../utils/cloudinary';
 import { generateFileName } from '../utils/generateFileName';
@@ -34,9 +35,11 @@ export const createAssetFinance = async (req, res, next) => {
         )}`,
       }
     );
+    const amount_paid = (req.body.cost * 60) / 100;
     const newAssetFinance = await AssetFinanceModel.create({
       ...req.body,
       user: userId,
+      amount_paid,
       proforma_invoice: {
         url: uploadedProformaInvoice.secure_url,
         public_id: uploadedProformaInvoice.public_id,
@@ -63,28 +66,27 @@ export const createAssetFinance = async (req, res, next) => {
 export const getUserAssets = async (req, res, next) => {
   const { _id: userId } = req.user;
   const { status } = req.query;
+  const validStatus = [ 'active', 'pending', 'completed' ];
+  if (!validStatus.includes(status)) {
+    return res.status(400).send({
+      statusCode: 400,
+      status: 'Error',
+      message: 'Invalid query staus',
+    });
+  }
   try {
-    const activeAssetFinances = await AssetFinanceModel.find({
-      user: userId,
-      status: 'active',
-    });
-    const pendingAssetFinances = await AssetFinanceModel.find({
-      user: userId,
-      status: 'pending',
-    });
-    const completedAssetFinances = await AssetFinanceModel.find({
-      user: userId,
-      status: 'completed',
-    });
+    const assets = await AssetFinanceModel.find({ user: userId, status });
+    const totalContribution = assets.reduce(
+      (acc, asset) => (acc += asset.amount_paid),
+      0
+    );
 
     return res.status(200).send({
       statusCode: 200,
       status: 'success',
       payload: {
-        totalContribution: 30000000,
-        active: activeAssetFinances,
-        pending: pendingAssetFinances,
-        completed: completedAssetFinances,
+        totalContribution,
+        assets,
       },
     });
   } catch (err) {
