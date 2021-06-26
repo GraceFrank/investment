@@ -82,10 +82,44 @@ export const sendAdminAssetCreationNotification = ({ emails, assetId }) => {
   const data = {
     from: 'Abudanza <support@mg.abudanza.africa>',
     to: emails,
-    subject: 'Asset Fincance Created',
+    subject: 'New Asset Fincance Created',
     template: 'asset_creation_admin',
     'h:X-Mailgun-Variables': JSON.stringify({
       assetsUrl: `${UI_BASE_URL}/admin/assets/${assetId}`,
+    }),
+  };
+
+  return mailer.messages().send(data, (error, body) => {
+    if (error) return Promise.reject(error);
+    return Promise.resolve(body);
+  });
+};
+
+export const sendUserInvestmentNotification = (email, name) => {
+  const data = {
+    from: 'Abudanza <support@mg.abudanza.africa>',
+    to: email,
+    subject: 'Investment Notification',
+    template: 'investment_creation_user',
+    'h:X-Mailgun-Variables': JSON.stringify({
+      investmentUrl: `${UI_BASE_URL}/investments`,
+      name: capitalize(name),
+    }),
+  };
+
+  return mailer.messages().send(data, (error, body) => {
+    if (error) return Promise.reject(error);
+    return Promise.resolve(body);
+  });
+};
+export const sendAdminInvestmentNotification = (emails, investmentId) => {
+  const data = {
+    from: 'Abudanza <support@mg.abudanza.africa>',
+    to: emails,
+    subject: 'New Investment Notification',
+    template: 'investment_creation_admin',
+    'h:X-Mailgun-Variables': JSON.stringify({
+      investmentUrl: `${UI_BASE_URL}/admin/investments/${investmentId}`,
     }),
   };
 

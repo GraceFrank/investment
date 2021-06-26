@@ -1,4 +1,3 @@
-import { query } from 'express';
 import AssetFinanceModel from '../models/AssetFinanceModel';
 import cloudinary from '../utils/cloudinary';
 import { generateFileName } from '../utils/generateFileName';

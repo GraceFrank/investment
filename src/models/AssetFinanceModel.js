@@ -22,12 +22,12 @@ const AssetFinanceSchema = new mongoose.Schema(
       maxlength: 255,
       trim: true,
     },
+
     amount_paid: {
       type: Number,
       required: true,
-      min: 10000,
-      max: 10000000,
     },
+
     cost: {
       type: Number,
       required: true,
