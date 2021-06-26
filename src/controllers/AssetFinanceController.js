@@ -1,17 +1,18 @@
-import AssetFinanceModel from "../models/AssetFinanceModel";
-import cloudinary from "../utils/cloudinary";
-import { generateFileName } from "../utils/generateFileName";
+import AssetFinanceModel from '../models/AssetFinanceModel';
+import cloudinary from '../utils/cloudinary';
+import { generateFileName } from '../utils/generateFileName';
+import { sendUserAssetCreationNotification } from '../utils/mailer';
 
 const { CLOUDINARY_BASE_PATH } = process.env;
 
 export const createAssetFinance = async (req, res, next) => {
   try {
-    const { _id: userId } = req.user;
+    const { _id: userId, email, first_name } = req.user;
     if (!req.files.proformaInvoice || !req.files.paymentProof) {
       return res.status(400).send({
         statusCode: 400,
-        status: "Error",
-        message: "Files paymentProof and proformaInvoice are required",
+        status: 'Error',
+        message: 'Files paymentProof and proformaInvoice are required',
       });
     }
     const proformaInvoice = req.files.proformaInvoice[0];
@@ -45,36 +46,40 @@ export const createAssetFinance = async (req, res, next) => {
         public_id: uploadedPaymentProof.public_id,
       },
     });
+    // Todo Send admin notifications
+    // sendAdminAssetCreationNotification()
+    sendUserAssetCreationNotification(email, first_name);
     return res.status(201).send({
       statusCode: 201,
-      status: "created",
+      status: 'created',
       payload: newAssetFinance,
     });
   } catch (err) {
-    console.log("ERRr", err);
+    console.log('ERRr', err);
     return next(err, req, res, next);
   }
 };
 
 export const getUserAssets = async (req, res, next) => {
   const { _id: userId } = req.user;
+  const { status } = req.query;
   try {
     const activeAssetFinances = await AssetFinanceModel.find({
       user: userId,
-      status: "active",
+      status: 'active',
     });
     const pendingAssetFinances = await AssetFinanceModel.find({
       user: userId,
-      status: "pending",
+      status: 'pending',
     });
     const completedAssetFinances = await AssetFinanceModel.find({
       user: userId,
-      status: "completed",
+      status: 'completed',
     });
 
     return res.status(200).send({
       statusCode: 200,
-      status: "success",
+      status: 'success',
       payload: {
         totalContribution: 30000000,
         active: activeAssetFinances,
