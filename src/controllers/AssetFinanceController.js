@@ -7,7 +7,7 @@ const { CLOUDINARY_BASE_PATH } = process.env;
 
 export const createAssetFinance = async (req, res, next) => {
   try {
-    const { _id: userId, email, first_name } = req.user;
+    const { _id: userId, email } = req.user;
     if (!req.files.proformaInvoice || !req.files.paymentProof) {
       return res.status(400).send({
         statusCode: 400,
@@ -34,11 +34,11 @@ export const createAssetFinance = async (req, res, next) => {
         )}`,
       }
     );
-    const amount_paid = (req.body.cost * 60) / 100;
+    const amountPaid = (req.body.cost * 60) / 100;
     const newAssetFinance = await AssetFinanceModel.create({
       ...req.body,
       user: userId,
-      amount_paid,
+      amount_paid: amountPaid,
       proforma_invoice: {
         url: uploadedProformaInvoice.secure_url,
         public_id: uploadedProformaInvoice.public_id,
@@ -50,7 +50,7 @@ export const createAssetFinance = async (req, res, next) => {
     });
     // Todo Send admin notifications
     // sendAdminAssetCreationNotification()
-    sendUserAssetCreationNotification(email, first_name);
+    sendUserAssetCreationNotification(email, req.user.first_name);
     return res.status(201).send({
       statusCode: 201,
       status: 'created',
@@ -76,7 +76,7 @@ export const getUserAssets = async (req, res, next) => {
   try {
     const assets = await AssetFinanceModel.find({ user: userId, status });
     const totalContribution = assets.reduce(
-      (acc, asset) => (acc += asset.amount_paid),
+      (acc, asset) => acc + asset.amount_paid,
       0
     );
 
