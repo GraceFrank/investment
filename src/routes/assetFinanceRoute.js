@@ -6,12 +6,17 @@ import {
   createAssetFinance,
   getUserAssets,
 } from '../controllers/AssetFinanceController';
+import { uploadFile } from '../middlewares/fileUploadMiddleware';
 
 const router = express.Router();
 
 router.post(
   '/',
   authenticateToken,
+  uploadFile.fields([
+    { name: 'proformaInvoice', maxCount: 1, minCount: 1 },
+    { name: 'paymentProof', maxCount: 1, minCount: 1 },
+  ]),
   validationMiddleware(assetFinanceSchema),
   createAssetFinance
 );

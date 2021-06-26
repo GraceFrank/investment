@@ -70,6 +70,40 @@ const AssetFinanceSchema = new mongoose.Schema(
       type: Date,
     },
 
+    payment_proof: {
+      url: {
+        type: String,
+        required: true,
+        maxlength: 500,
+        trim: true,
+      },
+
+      public_id: {
+        type: String,
+        required: true,
+        minlength: 2,
+        maxlength: 255,
+        trim: true,
+      },
+    },
+
+    proforma_invoice: {
+      url: {
+        type: String,
+        required: true,
+        maxlength: 500,
+        trim: true,
+      },
+
+      public_id: {
+        type: String,
+        required: true,
+        minlength: 2,
+        maxlength: 255,
+        trim: true,
+      },
+    },
+
     user: {
       type: mongoose.Types.ObjectId,
       ref: 'users',

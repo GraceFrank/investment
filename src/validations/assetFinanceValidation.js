@@ -12,17 +12,16 @@ export const assetFinanceSchema = Joi.object({
   vendor_phone: Joi.string()
     .pattern(/^[0-9]+$/, { name: 'numbers' })
     .required()
-    .min(11)
-    .max(11),
-  vendor_address: Joi.object({
-    street_address: Joi.string().required().min(1).max(255)
-      .trim(),
-    street_address2: Joi.string().min(1).max(255).trim(),
-    city: Joi.string().required().min(1).max(255)
-      .trim(),
-    state: Joi.string().required().min(1).max(255)
-      .trim(),
-    country: Joi.string().required().min(1).max(255)
-      .trim(),
-  }).required(),
+    .min(5)
+    .max(20),
+  vendor_website: Joi.string().uri(),
+  vendor_street_address: Joi.string().required().min(1).max(255)
+    .trim(),
+  vendor_street_address2: Joi.string().min(1).max(255).trim(),
+  vendor_city: Joi.string().required().min(1).max(255)
+    .trim(),
+  vendor_state: Joi.string().required().min(1).max(255)
+    .trim(),
+  vendor_country: Joi.string().required().min(1).max(255)
+    .trim(),
 });
