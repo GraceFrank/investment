@@ -4,7 +4,9 @@ const INTEREST_RATES = {
   365: 45 / 100,
 };
 export function calculateAmountDue(duration, principal) {
-  return principal + INTEREST_RATES[duration] * principal;
+  return (
+    Number(principal) + Number(INTEREST_RATES[duration]) * Number(principal)
+  );
 }
 
 export function getDueDate(activationDate, duration) {

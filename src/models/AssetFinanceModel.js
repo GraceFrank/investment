@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { addressSchema } from './ProfileModel';
 
 const AssetFinanceSchema = new mongoose.Schema(
   {
@@ -16,6 +15,14 @@ const AssetFinanceSchema = new mongoose.Schema(
     },
 
     brand: {
+      type: String,
+      required: true,
+      minlength: 1,
+      maxlength: 255,
+      trim: true,
+    },
+
+    model: {
       type: String,
       required: true,
       minlength: 1,
@@ -64,7 +71,32 @@ const AssetFinanceSchema = new mongoose.Schema(
       trim: true,
     },
 
-    vendor_address: addressSchema,
+    vendor_street_address: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 255,
+    },
+
+    vendor_city: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 255,
+    },
+
+    vendor_state: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 255,
+    },
+    vendor_country: {
+      type: String,
+      // required: true,
+      trim: true,
+      maxlength: 255,
+    },
 
     duration: {
       type: Number,
@@ -73,6 +105,9 @@ const AssetFinanceSchema = new mongoose.Schema(
     },
 
     activation_date: {
+      type: Date,
+    },
+    due_date: {
       type: Date,
     },
 
