@@ -5,6 +5,7 @@ import bankDetailsRouter from './bankDetailsRoute';
 import nextOfKinRouter from './nextOfKinRoute';
 import assetFinanceRouter from './assetFinanceRoute';
 import investmentRouter from './investmentRoute';
+import referralsRoute from './referralsRoute';
 
 const rootRouter = express.Router();
 
@@ -14,5 +15,6 @@ rootRouter.use('/bankdetails', bankDetailsRouter);
 rootRouter.use('/nextofkin', nextOfKinRouter);
 rootRouter.use('/assets', assetFinanceRouter);
 rootRouter.use('/investments', investmentRouter);
+rootRouter.use('/referrals', referralsRoute);
 
 export default rootRouter;
