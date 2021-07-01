@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import PasswordComplexity from 'joi-password-complexity';
 
 export const signupSchema = Joi.object({
   email: Joi.string().email().required().min(5)
@@ -6,14 +7,14 @@ export const signupSchema = Joi.object({
   phone: Joi.string().max(20).min(4).required(),
   firstName: Joi.string().required().min(1).max(255),
   lastName: Joi.string().required().min(1).max(255),
-  password: Joi.string()
-    .required()
-    .max(255)
-    .pattern(new RegExp('(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}'))
-    .messages({
-      'string.pattern':
-        '"password" must contain a number, a string and be at least 8 characters',
-    }),
+  password: new PasswordComplexity({
+    min: 8,
+    max: 25,
+    lowerCase: 1,
+    upperCase: 1,
+    numeric: 1,
+    requirementCount: 4,
+  }),
 });
 
 export const loginSchema = Joi.object({
@@ -29,12 +30,12 @@ export const sendMailSchema = Joi.object({
 });
 
 export const changePasswordSchema = Joi.object({
-  password: Joi.string()
-    .required()
-    .max(255)
-    .pattern(new RegExp('(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}'))
-    .messages({
-      'string.pattern':
-        '"password" must contain a number, a string and be at least 8 characters',
-    }),
+  password: new PasswordComplexity({
+    min: 8,
+    max: 25,
+    lowerCase: 1,
+    upperCase: 1,
+    numeric: 1,
+    requirementCount: 4,
+  }),
 });

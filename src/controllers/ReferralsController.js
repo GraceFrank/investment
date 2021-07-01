@@ -4,7 +4,10 @@ import ReferralModel from '../models/ReferralModel';
 
 export const getReferrals = async (req, res, next) => {
   try {
-    const referrals = ReferralModel.find({ referrerId: req.user.account_id });
+    const referrals = await ReferralModel.find({
+      referrer: req.user.account_id,
+    });
+
     const totalEarned = referrals.reduce(
       (total, referral) => total + referral.bonus,
       0
@@ -16,17 +19,22 @@ export const getReferrals = async (req, res, next) => {
       payload: { totalEarned, referrals },
     });
   } catch (err) {
+    console.log(err);
     return next(err, req, res, next);
   }
 };
 
 export const createReferral = async (referrerId, refereeId) => {
-  const referrer = await UserModel.findOne({ account_id: referrerId });
-  if (referrer) {
-    await ReferralModel.create({
-      referrer: referrerId,
-      referee: refereeId,
-    });
+  try {
+    const referrer = await UserModel.findOne({ account_id: referrerId });
+    if (referrer) {
+      await ReferralModel.create({
+        referrer: referrerId,
+        referee: refereeId,
+      });
+    }
+  } catch (err) {
+    console.log('ERROR', err);
   }
 };
 

@@ -13,12 +13,12 @@ const ReferralSchema = new mongoose.Schema(
       default: 0,
     },
     referrer: {
-      type: mongoose.Types.ObjectId,
+      type: String,
       ref: 'users',
       required: true,
     },
     referee: {
-      type: mongoose.Types.ObjectId,
+      type: String,
       ref: 'users',
       required: true,
     },
