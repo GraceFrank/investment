@@ -6,6 +6,7 @@ import {
   sendEmailConfirmedMail,
   sendPasswordResetEmail,
 } from '../utils/mailer';
+import { createReferral } from './ReferralsController';
 
 export const login = async (req, res, next) => {
   try {
@@ -48,6 +49,7 @@ export const register = async (req, res, next) => {
     const {
       email, phone, password, firstName, lastName
     } = req.body;
+    const { ref } = req.query;
 
     // check if user with phone or email already exists
     const existingUser = await UserModel.findOne({
@@ -75,6 +77,10 @@ export const register = async (req, res, next) => {
       data: { email: newUser.email },
       expires: '24h',
     });
+
+    if (ref) {
+      createReferral(ref, newUser.account_id);
+    }
 
     sendActivationMail({
       name: capitalize(newUser.first_name),

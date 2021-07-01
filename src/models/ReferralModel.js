@@ -22,6 +22,11 @@ const ReferralSchema = new mongoose.Schema(
       ref: 'users',
       required: true,
     },
+    paid: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   { timestamps: true }
 );
