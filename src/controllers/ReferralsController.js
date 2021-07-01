@@ -25,7 +25,7 @@ export const getReferrals = async (req, res, next) => {
     return res.status(200).send({
       statusCode: 200,
       status: 'success',
-      payload: fakeData,
+      payload: { totalEarned: 1000, referrals: fakeData },
     });
   } catch (err) {
     return next(err, req, res, next);
