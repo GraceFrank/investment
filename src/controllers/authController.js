@@ -196,10 +196,33 @@ export const requestPasswordReset = async (req, res, next) => {
   }
 };
 
-export const updatePassword = async (req, res, next) => {
+export const resetPassword = async (req, res, next) => {
   const { _id } = req.user;
   try {
     const updatedUser = await UserModel.updateOne({ _id }, req.body);
+
+    if (!updatedUser) {
+      const error = new AppError(404, 'fail', 'Error Upating Password');
+      return next(error, req, res, next);
+    }
+
+    return res.status(200).send({
+      statusCode: 200,
+      status: 'success',
+      message: 'password updated',
+    });
+  } catch (err) {
+    return next(err, req, res, next);
+  }
+};
+export const changePassword = async (req, res, next) => {
+  const { user } = req;
+  try {
+    // validate password
+    const isValidPassword = await user.validatePassword(user.password);
+    if (!isValidPassword) return res.status(400).send({ message: 'Incorrect  password' });
+
+    const updatedUser = await user.updateOne({ _id: user._id }, req.body);
 
     if (!updatedUser) {
       const error = new AppError(404, 'fail', 'Error Upating Password');

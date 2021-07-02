@@ -5,12 +5,16 @@ import {
   loginSchema,
   sendMailSchema,
   changePasswordSchema,
+  forgotPasswordSchema,
 } from '../validations/authValidation';
 import {
   login,
   register,
   validateConfirmationToken,
   sendVerificationEmail,
+  requestPasswordReset,
+  changePassword,
+  resetPassword,
 } from '../controllers/authController';
 import authenticateToken from '../middlewares/authenticate';
 
@@ -24,11 +28,28 @@ router.post(
   validationMiddleware(sendMailSchema),
   sendVerificationEmail
 );
+
+// change password when logged in
 router.put(
   '/change-password',
   authenticateToken,
   validationMiddleware(changePasswordSchema),
-  validateConfirmationToken
+  changePassword
+);
+
+// Change password via reset link sent to email
+router.put(
+  '/reset-password',
+  authenticateToken,
+  validationMiddleware(forgotPasswordSchema),
+  resetPassword
+);
+
+// Requst to reset password
+router.post(
+  '/forgot-password',
+  validationMiddleware(sendMailSchema),
+  requestPasswordReset
 );
 
 export default router;

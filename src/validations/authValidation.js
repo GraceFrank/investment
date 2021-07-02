@@ -14,7 +14,7 @@ export const signupSchema = Joi.object({
     upperCase: 1,
     numeric: 1,
     requirementCount: 4,
-  }),
+  }).required(),
 });
 
 export const loginSchema = Joi.object({
@@ -30,12 +30,25 @@ export const sendMailSchema = Joi.object({
 });
 
 export const changePasswordSchema = Joi.object({
-  password: new PasswordComplexity({
+  currentPassword: Joi.string().max(255).required(),
+  newPassword: new PasswordComplexity({
+    required: true,
     min: 8,
     max: 25,
     lowerCase: 1,
     upperCase: 1,
     numeric: 1,
     requirementCount: 4,
-  }),
+  }).required(),
+});
+
+export const forgotPasswordSchema = Joi.object({
+  newPassword: new PasswordComplexity({
+    min: 8,
+    max: 25,
+    lowerCase: 1,
+    upperCase: 1,
+    numeric: 1,
+    requirementCount: 4,
+  }).required(),
 });
