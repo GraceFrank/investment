@@ -1,7 +1,7 @@
-import mongoose from 'mongoose'
-import bcrypt from 'bcrypt'
-import { nanoid } from 'nanoid'
-import jwt from 'jsonwebtoken'
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
+import { nanoid } from 'nanoid';
+import jwt from 'jsonwebtoken';
 
 const userSchema = new mongoose.Schema(
   {
@@ -47,7 +47,7 @@ const userSchema = new mongoose.Schema(
 
     role: {
       type: String,
-      enum: ['superAdmin', 'admin', 'user'],
+      enum: [ 'superAdmin', 'admin', 'user' ],
       default: 'user',
     },
 
@@ -55,53 +55,53 @@ const userSchema = new mongoose.Schema(
     verified_phone: { type: Boolean, default: false },
     verified_email: { type: Boolean, default: false },
   },
-  { timestamps: true },
-)
+  { timestamps: true }
+);
 
 userSchema.methods.generateToken = function (details) {
-  const secret = process.env.PRIVATE_KEY
+  const secret = process.env.PRIVATE_KEY;
   const payload = details
     ? details.data
-    : { account_id: this.account_id, role: this.role, email: this.email }
-  const expiresIn = details ? details.expires : '2d'
+    : { account_id: this.account_id, role: this.role, email: this.email };
+  const expiresIn = details ? details.expires : '2d';
   return jwt.sign(
     {
       ...payload,
     },
     secret,
-    { expiresIn },
-  )
-}
+    { expiresIn }
+  );
+};
 
 userSchema.methods.validatePassword = async function (providedPassword) {
-  const isMatch = await bcrypt.compare(providedPassword, this.password)
-  return isMatch
-}
+  const isMatch = await bcrypt.compare(providedPassword, this.password);
+  return isMatch;
+};
 
 // generate account Id before saving
 userSchema.pre('validate', function (next) {
-  if (this.account_id) return next()
-  this.account_id = nanoid(6)
-  return next()
-})
+  if (this.account_id) return next();
+  this.account_id = nanoid(6);
+  return next();
+});
 
 // hash password before saving
 userSchema.pre('save', async function (next) {
-  const user = this
-  if (!user.isModified('password')) return next()
+  const user = this;
+  if (!user.isModified('password')) return next();
 
-  const hashedPassword = await bcrypt.hash(user.password, 10)
-  user.password = hashedPassword
+  const hashedPassword = await bcrypt.hash(user.password, 10);
+  user.password = hashedPassword;
 
-  return next()
-})
+  return next();
+});
 
 userSchema.pre('updateOne', async function (next) {
-  const { _update } = this
-  const hashedPassword = await bcrypt.hash(_update.password, 10)
-  _update.password = hashedPassword
+  const { _update } = this;
+  const hashedPassword = await bcrypt.hash(_update.password, 10);
+  _update.password = hashedPassword;
 
-  return next()
-})
+  return next();
+});
 
-export default mongoose.model('users', userSchema)
+export default mongoose.model('users', userSchema);
