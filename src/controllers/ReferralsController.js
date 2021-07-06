@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
-import UserModel from '../models/UserModel';
-import ReferralModel from '../models/ReferralModel';
+import UserModel from "../models/UserModel";
+import ReferralModel from "../models/ReferralModel";
 
 export const getReferrals = async (req, res, next) => {
   try {
@@ -15,7 +15,7 @@ export const getReferrals = async (req, res, next) => {
 
     return res.status(200).send({
       statusCode: 200,
-      status: 'success',
+      status: "success",
       payload: { totalEarned, referrals },
     });
   } catch (err) {
@@ -34,7 +34,7 @@ export const createReferral = async (referrerId, refereeId) => {
       });
     }
   } catch (err) {
-    console.log('ERROR', err);
+    console.log("ERROR", err);
   }
 };
 

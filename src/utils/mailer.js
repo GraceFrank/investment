@@ -1,6 +1,6 @@
-import dotenv from 'dotenv';
-import Mailgun from 'mailgun-js';
-import capitalize from './Capitalize';
+import dotenv from "dotenv";
+import Mailgun from "mailgun-js";
+import capitalize from "./Capitalize";
 
 dotenv.config();
 
@@ -11,11 +11,11 @@ const { UI_BASE_URL } = process.env;
 
 export const sendActivationMail = ({ name, email, token }) => {
   const data = {
-    from: 'Abudanza <support@mg.abudanza.africa>',
+    from: "Abudanza <support@mg.abudanza.africa>",
     to: email,
-    subject: 'Abudanza: Confirm Your Email',
-    template: 'activate_account_request',
-    'h:X-Mailgun-Variables': JSON.stringify({
+    subject: "Abudanza: Confirm Your Email",
+    template: "activate_account_request",
+    "h:X-Mailgun-Variables": JSON.stringify({
       name: capitalize(name),
       confirmation_url: `${UI_BASE_URL}/verification/?confirmation_token=${token}`,
     }),
@@ -29,11 +29,11 @@ export const sendActivationMail = ({ name, email, token }) => {
 
 export const sendEmailConfirmedMail = ({ name, email }) => {
   const data = {
-    from: 'Abudanza <support@mg.abudanza.africa>',
+    from: "Abudanza <support@mg.abudanza.africa>",
     to: email,
-    subject: 'Abudanza Account Activated',
-    template: 'email_confirmed',
-    'h:X-Mailgun-Variables': JSON.stringify({
+    subject: "Abudanza Account Activated",
+    template: "email_confirmed",
+    "h:X-Mailgun-Variables": JSON.stringify({
       firstName: capitalize(name),
       loginUrl: `${UI_BASE_URL}/login/`,
     }),
@@ -46,11 +46,11 @@ export const sendEmailConfirmedMail = ({ name, email }) => {
 
 export const sendPasswordResetEmail = ({ email, token }) => {
   const data = {
-    from: 'Abudanza <support@mg.abudanza.africa>',
+    from: "Abudanza <support@mg.abudanza.africa>",
     to: email,
-    subject: 'Abudanza Password Reset',
-    template: 'password_reset',
-    'h:X-Mailgun-Variables': JSON.stringify({
+    subject: "Abudanza Password Reset",
+    template: "password_reset",
+    "h:X-Mailgun-Variables": JSON.stringify({
       password_reset_url: `${UI_BASE_URL}/reset-password/?reset_token=${token}`,
     }),
   };
@@ -63,11 +63,11 @@ export const sendPasswordResetEmail = ({ email, token }) => {
 
 export const sendUserAssetCreationNotification = (email, name) => {
   const data = {
-    from: 'Abudanza <support@mg.abudanza.africa>',
+    from: "Abudanza <support@mg.abudanza.africa>",
     to: email,
-    subject: 'Asset Fincance Created',
-    template: 'asset_created_user',
-    'h:X-Mailgun-Variables': JSON.stringify({
+    subject: "Asset Fincance Created",
+    template: "asset_created_user",
+    "h:X-Mailgun-Variables": JSON.stringify({
       assetsUrl: `${UI_BASE_URL}/assets`,
       name: capitalize(name),
     }),
@@ -80,11 +80,11 @@ export const sendUserAssetCreationNotification = (email, name) => {
 };
 export const sendAdminAssetCreationNotification = ({ emails, assetId }) => {
   const data = {
-    from: 'Abudanza <support@mg.abudanza.africa>',
+    from: "Abudanza <support@mg.abudanza.africa>",
     to: emails,
-    subject: 'New Asset Fincance Created',
-    template: 'asset_creation_admin',
-    'h:X-Mailgun-Variables': JSON.stringify({
+    subject: "New Asset Fincance Created",
+    template: "asset_creation_admin",
+    "h:X-Mailgun-Variables": JSON.stringify({
       assetsUrl: `${UI_BASE_URL}/admin/assets/${assetId}`,
     }),
   };
@@ -97,11 +97,11 @@ export const sendAdminAssetCreationNotification = ({ emails, assetId }) => {
 
 export const sendUserInvestmentNotification = (email, name) => {
   const data = {
-    from: 'Abudanza <support@mg.abudanza.africa>',
+    from: "Abudanza <support@mg.abudanza.africa>",
     to: email,
-    subject: 'Investment Notification',
-    template: 'investment_creation_user',
-    'h:X-Mailgun-Variables': JSON.stringify({
+    subject: "Investment Notification",
+    template: "investment_creation_user",
+    "h:X-Mailgun-Variables": JSON.stringify({
       investmentUrl: `${UI_BASE_URL}/investments`,
       name: capitalize(name),
     }),
@@ -114,11 +114,11 @@ export const sendUserInvestmentNotification = (email, name) => {
 };
 export const sendAdminInvestmentNotification = (emails, investmentId) => {
   const data = {
-    from: 'Abudanza <support@mg.abudanza.africa>',
+    from: "Abudanza <support@mg.abudanza.africa>",
     to: emails,
-    subject: 'New Investment Notification',
-    template: 'investment_creation_admin',
-    'h:X-Mailgun-Variables': JSON.stringify({
+    subject: "New Investment Notification",
+    template: "investment_creation_admin",
+    "h:X-Mailgun-Variables": JSON.stringify({
       investmentUrl: `${UI_BASE_URL}/admin/investments/${investmentId}`,
     }),
   };

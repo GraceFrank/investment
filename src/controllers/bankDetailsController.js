@@ -1,9 +1,9 @@
-import _ from 'lodash';
-import BankDetailsModel from '../models/BankDetailsModel';
-import AppError from '../utils/appError';
+import _ from "lodash";
+import BankDetailsModel from "../models/BankDetailsModel";
+import AppError from "../utils/appError";
 
 function bankDetailsDTO(bankDetails) {
-  return _.pick(bankDetails, [ 'account_name', 'account_number', 'bank_name' ]);
+  return _.pick(bankDetails, ["account_name", "account_number", "bank_name"]);
 }
 
 export const createBankDetails = async (req, res, next) => {
@@ -14,7 +14,7 @@ export const createBankDetails = async (req, res, next) => {
       user: userId,
     });
     if (existingBankDetails) {
-      const error = new AppError(400, 'fail', 'Bank details already exist');
+      const error = new AppError(400, "fail", "Bank details already exist");
       return next(error, req, res, next);
     }
 
@@ -24,7 +24,7 @@ export const createBankDetails = async (req, res, next) => {
     });
     return res.status(201).send({
       statusCode: 201,
-      status: 'created',
+      status: "created",
       payload: bankDetailsDTO(newBankDetails),
     });
   } catch (err) {
@@ -43,13 +43,13 @@ export const updateBankDetails = async (req, res, next) => {
     );
 
     if (!updatedBankDetails) {
-      const error = new AppError(404, 'fail', 'Bank details Dosent Exist');
+      const error = new AppError(404, "fail", "Bank details Dosent Exist");
       return next(error, req, res, next);
     }
 
     return res.status(200).send({
       statusCode: 200,
-      status: 'success',
+      status: "success",
       payload: bankDetailsDTO(updatedBankDetails),
     });
   } catch (err) {
@@ -65,14 +65,14 @@ export const getBankDetails = async (req, res, next) => {
     if (!bankDetails) {
       return res.status(404).send({
         statusCode: 404,
-        status: 'fail',
+        status: "fail",
         payload: null,
       });
     }
 
     return res.status(200).send({
       statusCode: 200,
-      status: 'success',
+      status: "success",
       payload: bankDetailsDTO(bankDetails),
     });
   } catch (err) {

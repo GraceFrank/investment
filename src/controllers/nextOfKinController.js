@@ -1,13 +1,13 @@
-import _ from 'lodash';
-import NextOfKinModel from '../models/NextOfKinModel';
-import AppError from '../utils/appError';
+import _ from "lodash";
+import NextOfKinModel from "../models/NextOfKinModel";
+import AppError from "../utils/appError";
 
 function nextOfKinDTO(nextOfKinDetails) {
   return _.pick(nextOfKinDetails, [
-    'full_name',
-    'email',
-    'phone',
-    'relationship',
+    "full_name",
+    "email",
+    "phone",
+    "relationship",
   ]);
 }
 
@@ -19,7 +19,7 @@ export const createNextOfKin = async (req, res, next) => {
       user: userId,
     });
     if (existingNextOfKin) {
-      const error = new AppError(400, 'fail', 'Next of kin already exist');
+      const error = new AppError(400, "fail", "Next of kin already exist");
       return next(error, req, res, next);
     }
 
@@ -29,7 +29,7 @@ export const createNextOfKin = async (req, res, next) => {
     });
     return res.status(201).send({
       statusCode: 201,
-      status: 'created',
+      status: "created",
       payload: nextOfKinDTO(newNextOfKin),
     });
   } catch (err) {
@@ -48,13 +48,13 @@ export const updateNextOfKin = async (req, res, next) => {
     );
 
     if (!updatedNextOfKin) {
-      const error = new AppError(404, 'fail', 'Next of kin Dosent Exist');
+      const error = new AppError(404, "fail", "Next of kin Dosent Exist");
       return next(error, req, res, next);
     }
 
     return res.status(200).send({
       statusCode: 200,
-      status: 'success',
+      status: "success",
       payload: nextOfKinDTO(updatedNextOfKin),
     });
   } catch (err) {
@@ -70,14 +70,14 @@ export const getNextOfKin = async (req, res, next) => {
     if (!nextOfKin) {
       return res.status(404).send({
         statusCode: 404,
-        status: 'fail',
+        status: "fail",
         payload: null,
       });
     }
 
     return res.status(200).send({
       statusCode: 200,
-      status: 'success',
+      status: "success",
       payload: nextOfKinDTO(nextOfKin),
     });
   } catch (err) {

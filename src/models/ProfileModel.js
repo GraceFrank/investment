@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 export const addressSchema = new mongoose.Schema({
   street_address: {
@@ -37,14 +37,14 @@ const profileSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      enum: [ 'Mr', 'Mrs', 'Miss', 'Ms' ],
-      default: 'Mr',
+      enum: ["Mr", "Mrs", "Miss", "Ms"],
+      default: "Mr",
     },
 
     marital_status: {
       type: String,
-      enum: [ 'single', 'married', 'widowed', 'divorced', 'separated' ],
-      default: 'single',
+      enum: ["single", "married", "widowed", "divorced", "separated"],
+      default: "single",
     },
 
     birthday: {
@@ -69,8 +69,7 @@ const profileSchema = new mongoose.Schema(
     id_card_url: { type: String, minlength: 7, maxlength: 255 },
     id_type: {
       type: String,
-      enum: [ 'voters_card', 'drivers_licence', 'NIN', 'passport' ],
-      required: true,
+      enum: ["voters_card", "drivers_licence", "NIN", "passport"],
     },
 
     bvn: {
@@ -88,11 +87,11 @@ const profileSchema = new mongoose.Schema(
 
     user: {
       type: mongoose.Types.ObjectId,
-      ref: 'users',
+      ref: "users",
       required: true,
     },
   },
   { timestamps: true }
 );
 
-export default mongoose.model('profiles', profileSchema);
+export default mongoose.model("profiles", profileSchema);

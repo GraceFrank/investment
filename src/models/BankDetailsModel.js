@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const BankDetailsSchema = new mongoose.Schema(
   {
@@ -28,11 +28,11 @@ const BankDetailsSchema = new mongoose.Schema(
 
     user: {
       type: mongoose.Types.ObjectId,
-      ref: 'users',
+      ref: "users",
       required: true,
     },
   },
   { timestamps: true }
 );
 
-export default mongoose.model('bank_details', BankDetailsSchema);
+export default mongoose.model("bank_details", BankDetailsSchema);

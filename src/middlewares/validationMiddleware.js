@@ -7,7 +7,7 @@ export default function validationMiddleware(JoiSchema, payload) {
         status: 400,
         error: error.message,
         message: error.message,
-        stack: process.env.NODE_ENV !== 'prod' && error.stack,
+        stack: process.env.NODE_ENV !== "prod" && error.stack,
       });
     }
 

@@ -1,17 +1,17 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const AssetFinanceSchema = new mongoose.Schema(
   {
     category: {
       type: String,
       enum: [
-        'electronics',
-        'automobile',
-        'computing/phone',
-        'fashion',
-        'others',
+        "electronics",
+        "automobile",
+        "computing/phone",
+        "fashion",
+        "others",
       ],
-      required: 'true',
+      required: "true",
     },
 
     brand: {
@@ -44,9 +44,9 @@ const AssetFinanceSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: [ 'active', 'pending', 'completed' ],
-      required: 'true',
-      default: 'pending',
+      enum: ["active", "pending", "completed"],
+      required: "true",
+      default: "pending",
     },
 
     vendor_name: {
@@ -147,11 +147,11 @@ const AssetFinanceSchema = new mongoose.Schema(
 
     user: {
       type: mongoose.Types.ObjectId,
-      ref: 'users',
+      ref: "users",
       required: true,
     },
   },
   { timestamps: true }
 );
 
-export default mongoose.model('assets', AssetFinanceSchema);
+export default mongoose.model("assets", AssetFinanceSchema);
