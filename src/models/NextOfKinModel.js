@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const NextOfKin = new mongoose.Schema(
   {
@@ -37,11 +37,11 @@ const NextOfKin = new mongoose.Schema(
 
     user: {
       type: mongoose.Types.ObjectId,
-      ref: "users",
+      ref: 'users',
       required: true,
     },
   },
   { timestamps: true }
 );
 
-export default mongoose.model("next_of_kins", NextOfKin);
+export default mongoose.model('next_of_kins', NextOfKin);

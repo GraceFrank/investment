@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const ReferralSchema = new mongoose.Schema(
   {
@@ -14,12 +14,12 @@ const ReferralSchema = new mongoose.Schema(
     },
     referrer: {
       type: String,
-      ref: "users",
+      ref: 'users',
       required: true,
     },
     referee: {
       type: String,
-      ref: "users",
+      ref: 'users',
       required: true,
     },
     paid: {
@@ -31,4 +31,4 @@ const ReferralSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("referrals", ReferralSchema);
+export default mongoose.model('referrals', ReferralSchema);

@@ -1,4 +1,4 @@
-import Joi from "joi";
+import Joi from 'joi';
 
 export const investmentSchema = Joi.object({
   duration: Joi.number().required().valid(90, 180, 360),

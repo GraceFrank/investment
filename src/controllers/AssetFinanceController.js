@@ -1,7 +1,7 @@
-import AssetFinanceModel from "../models/AssetFinanceModel";
-import cloudinary from "../utils/cloudinary";
-import { generateFileName } from "../utils/generateFileName";
-import { sendUserAssetCreationNotification } from "../utils/mailer";
+import AssetFinanceModel from '../models/AssetFinanceModel';
+import cloudinary from '../utils/cloudinary';
+import { generateFileName } from '../utils/generateFileName';
+import { sendUserAssetCreationNotification } from '../utils/mailer';
 
 const { CLOUDINARY_BASE_PATH } = process.env;
 
@@ -11,8 +11,8 @@ export const createAssetFinance = async (req, res, next) => {
     if (!req.files.proformaInvoice || !req.files.paymentProof) {
       return res.status(400).send({
         statusCode: 400,
-        status: "Error",
-        message: "Files paymentProof and proformaInvoice are required",
+        status: 'Error',
+        message: 'Files paymentProof and proformaInvoice are required',
       });
     }
     const proformaInvoice = req.files.proformaInvoice[0];
@@ -53,11 +53,11 @@ export const createAssetFinance = async (req, res, next) => {
     sendUserAssetCreationNotification(email, req.user.first_name);
     return res.status(201).send({
       statusCode: 201,
-      status: "created",
+      status: 'created',
       payload: newAssetFinance,
     });
   } catch (err) {
-    console.log("ERRr", err);
+    console.log('ERRr', err);
     return next(err, req, res, next);
   }
 };
@@ -65,12 +65,12 @@ export const createAssetFinance = async (req, res, next) => {
 export const getUserAssets = async (req, res, next) => {
   const { _id: userId } = req.user;
   const { status } = req.query;
-  const validStatus = ["active", "pending", "completed"];
+  const validStatus = [ 'active', 'pending', 'completed' ];
   if (!validStatus.includes(status)) {
     return res.status(400).send({
       statusCode: 400,
-      status: "Error",
-      message: "Invalid query staus",
+      status: 'Error',
+      message: 'Invalid query staus',
     });
   }
   try {
@@ -82,7 +82,7 @@ export const getUserAssets = async (req, res, next) => {
 
     return res.status(200).send({
       statusCode: 200,
-      status: "success",
+      status: 'success',
       payload: {
         totalContribution,
         assets,

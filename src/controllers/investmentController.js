@@ -1,8 +1,8 @@
-import InvestmentModel from "../models/InvestmentModel";
-import cloudinary from "../utils/cloudinary";
-import { generateFileName } from "../utils/generateFileName";
-import { calculateAmountDue } from "../utils/investmentUtils";
-import { sendUserInvestmentNotification } from "../utils/mailer";
+import InvestmentModel from '../models/InvestmentModel';
+import cloudinary from '../utils/cloudinary';
+import { generateFileName } from '../utils/generateFileName';
+import { calculateAmountDue } from '../utils/investmentUtils';
+import { sendUserInvestmentNotification } from '../utils/mailer';
 
 const { CLOUDINARY_BASE_PATH } = process.env;
 
@@ -35,11 +35,11 @@ export const createInvestment = async (req, res, next) => {
     sendUserInvestmentNotification(email, req.user.first_name);
     return res.status(201).send({
       statusCode: 201,
-      status: "created",
+      status: 'created',
       payload: newInvestment,
     });
   } catch (err) {
-    console.log("ERRr", err);
+    console.log('ERRr', err);
     return next(err, req, res, next);
   }
 };
@@ -47,12 +47,12 @@ export const createInvestment = async (req, res, next) => {
 export const getUserInvestments = async (req, res, next) => {
   const { _id: userId } = req.user;
   const { status } = req.query;
-  const validStatus = ["active", "pending", "completed"];
+  const validStatus = [ 'active', 'pending', 'completed' ];
   if (!validStatus.includes(status)) {
     return res.status(400).send({
       statusCode: 400,
-      status: "Error",
-      message: "Invalid query staus",
+      status: 'Error',
+      message: 'Invalid query staus',
     });
   }
   try {
@@ -64,7 +64,7 @@ export const getUserInvestments = async (req, res, next) => {
 
     return res.status(200).send({
       statusCode: 200,
-      status: "success",
+      status: 'success',
       payload: {
         totalContribution,
         investments,

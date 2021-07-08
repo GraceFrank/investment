@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const investmentSchema = new mongoose.Schema(
   {
@@ -15,14 +15,14 @@ const investmentSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["active", "pending", "completed"],
-      required: "true",
-      default: "pending",
+      enum: [ 'active', 'pending', 'completed' ],
+      required: 'true',
+      default: 'pending',
     },
 
     duration: {
       type: Number,
-      enum: [90, 180, 360],
+      enum: [ 90, 180, 360 ],
       default: 90,
       required: true,
     },
@@ -50,11 +50,11 @@ const investmentSchema = new mongoose.Schema(
 
     user: {
       type: mongoose.Types.ObjectId,
-      ref: "users",
+      ref: 'users',
       required: true,
     },
   },
   { timestamps: true }
 );
 
-export default mongoose.model("investments", investmentSchema);
+export default mongoose.model('investments', investmentSchema);
