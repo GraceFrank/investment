@@ -73,6 +73,12 @@ userSchema.methods.generateToken = function (details) {
   );
 };
 
+userSchema.methods.toJSON = function () {
+  const obj = this.toObject();
+  delete obj.passwordHash;
+  return obj;
+};
+
 userSchema.methods.validatePassword = async function (providedPassword) {
   const isMatch = await bcrypt.compare(providedPassword, this.password);
   return isMatch;
