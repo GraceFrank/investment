@@ -79,7 +79,7 @@ export const getProfile = async (req, res, next) => {
 
 export const getProfiles = async (req, res, next) => {
   try {
-    const profiles = await ProfileModel.find().populate('user', '-password');
+    const profiles = await ProfileModel.find().populate('user', '-password').sort({ date: 'desc' });
     if (!profiles) {
       return res.status(404).send({
         statusCode: 404,
