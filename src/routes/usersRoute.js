@@ -10,11 +10,15 @@ import {
   getAllUsers,
   updateUser,
   createAdminUser,
+  getUserById,
 } from '../controllers/userController';
+import validateId from '../middlewares/validateIdMiddleware';
 
 const router = express.Router();
 
 router.get('/', authenticateToken, authorize, getAllUsers);
+router.get('/:id', authenticateToken, authorize, validateId, getUserById);
+
 router.post(
   '/',
   authenticateToken,

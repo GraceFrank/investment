@@ -23,7 +23,9 @@ export const createProfile = async (req, res, next) => {
 };
 
 export const updateProfile = async (req, res, next) => {
-  const search = req.params.id ? { _id: req.params.id } : { user: req.user._id };
+  const search = req.params.id
+    ? { _id: req.params.id }
+    : { user: req.user._id };
   const profile = req.body;
   try {
     const updatedProfile = await ProfileModel.findOneAndUpdate(
@@ -48,9 +50,14 @@ export const updateProfile = async (req, res, next) => {
 };
 
 export const getProfile = async (req, res, next) => {
-  const search = req.params.id ? { _id: req.params.id } : { user: req.user._id };
+  const search = req.params.id
+    ? { _id: req.params.id }
+    : { user: req.user._id };
   try {
-    const profile = await ProfileModel.findOne(search).populate('user', '-password');
+    const profile = await ProfileModel.findOne(search).populate(
+      'user',
+      '-password'
+    );
 
     if (!profile) {
       return res.status(404).send({

@@ -7,7 +7,8 @@ import {
 import {
   getProfile,
   createProfile,
-  updateProfile, getProfiles,
+  updateProfile,
+  getProfiles,
 } from '../controllers/profileController';
 import authenticateToken from '../middlewares/authenticate';
 import validateId from '../middlewares/validateIdMiddleware';
@@ -28,7 +29,7 @@ router.put(
   validationMiddleware(profileSchema),
   updateProfile
 );
-//APPROVE OR DECLINE PROFILE
+// APPROVE OR DECLINE PROFILE
 router.put(
   '/:id',
   authenticateToken,
@@ -37,18 +38,7 @@ router.put(
   validationMiddleware(approveProfileSchema),
   updateProfile
 );
-router.get(
-  '/all',
-  authenticateToken,
-  authorize,
-  getProfiles
-);
-router.get(
-  '/:id',
-  authenticateToken,
-  authorize,
-  validateId,
-  getProfile
-);
+router.get('/all', authenticateToken, authorize, getProfiles);
+router.get('/:id', authenticateToken, authorize, validateId, getProfile);
 
 export default router;
