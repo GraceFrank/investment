@@ -1,38 +1,5 @@
 import mongoose from 'mongoose';
 
-export const addressSchema = new mongoose.Schema({
-  street_address: {
-    type: String,
-    required: true,
-    trim: true,
-    maxlength: 255,
-  },
-  street_address2: {
-    type: String,
-    trim: true,
-    maxlength: 255,
-  },
-  city: {
-    type: String,
-    required: true,
-    trim: true,
-    maxlength: 255,
-  },
-
-  state: {
-    type: String,
-    required: true,
-    trim: true,
-    maxlength: 255,
-  },
-  country: {
-    type: String,
-    required: true,
-    trim: true,
-    maxlength: 255,
-  },
-});
-
 const profileSchema = new mongoose.Schema(
   {
     title: {
@@ -78,17 +45,48 @@ const profileSchema = new mongoose.Schema(
       minlength: 11,
       maxlength: 11,
     },
-    address: {
-      type: addressSchema,
+    street_address: {
+      type: String,
       required: true,
+      trim: true,
+      maxlength: 255,
     },
-
+    street_address2: {
+      type: String,
+      trim: true,
+      maxlength: 255,
+    },
+    city: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 255,
+    },
+    state: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 255,
+    },
+    country: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 255,
+    },
     isDeleted: { type: Boolean, default: false },
+
+    status: {
+      type: String,
+      enum: [ 'approved', 'declined', 'pending' ],
+      default: 'pending',
+    },
 
     user: {
       type: mongoose.Types.ObjectId,
       ref: 'users',
       required: true,
+      unique: true,
     },
   },
   { timestamps: true }

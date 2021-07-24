@@ -30,3 +30,7 @@ export const uploadIdCardValidation = Joi.object({
     .valid('voters_card', 'drivers_licence', 'NIN', 'passport')
     .required(),
 }).required();
+
+export const approveProfileSchema = Joi.object({
+  status: Joi.string().valid('approved', 'declined').required(),
+}).required();

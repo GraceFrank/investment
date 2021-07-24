@@ -1,21 +1,5 @@
-import _ from 'lodash';
 import ProfileModel from '../models/ProfileModel';
 import AppError from '../utils/appError';
-
-function profileDTO(profile) {
-  return _.pick(profile, [
-    'title',
-    'birthday',
-    'nationality',
-    'mothers_maiden_name',
-    'photo_url',
-    'bvn',
-    'id_card_url',
-    'photo_url',
-    'address',
-    'marital_status',
-  ]);
-}
 
 export const createProfile = async (req, res, next) => {
   const { _id: userId } = req.user;
@@ -31,7 +15,7 @@ export const createProfile = async (req, res, next) => {
     return res.status(201).send({
       statusCode: 201,
       status: 'created',
-      payload: profileDTO(newProfile),
+      payload: newProfile,
     });
   } catch (err) {
     return next(err, req, res, next);
@@ -39,24 +23,24 @@ export const createProfile = async (req, res, next) => {
 };
 
 export const updateProfile = async (req, res, next) => {
-  const { _id: userId } = req.user;
+  const search = req.params.id ? { _id: req.params.id } : { user: req.user._id };
   const profile = req.body;
   try {
     const updatedProfile = await ProfileModel.findOneAndUpdate(
-      { user: userId },
+      search,
       { ...profile },
       { new: true }
     );
 
     if (!updatedProfile) {
-      const error = new AppError(404, 'fail', 'Profile Dosent Exist');
+      const error = new AppError(404, 'fail', 'Profile Dose not Exist');
       return next(error, req, res, next);
     }
 
     return res.status(200).send({
       statusCode: 200,
       status: 'success',
-      payload: profileDTO(updateProfile),
+      payload: updatedProfile,
     });
   } catch (err) {
     return next(err, req, res, next);
@@ -64,9 +48,9 @@ export const updateProfile = async (req, res, next) => {
 };
 
 export const getProfile = async (req, res, next) => {
-  const { _id: userId } = req.user;
+  const search = req.params.id ? { _id: req.params.id } : { user: req.user._id };
   try {
-    const profile = await ProfileModel.findOne({ user: userId });
+    const profile = await ProfileModel.findOne(search).populate('user', '-password');
 
     if (!profile) {
       return res.status(404).send({
@@ -79,7 +63,28 @@ export const getProfile = async (req, res, next) => {
     return res.status(200).send({
       statusCode: 200,
       status: 'success',
-      payload: profileDTO(profile),
+      payload: profile,
+    });
+  } catch (err) {
+    return next(err, req, res, next);
+  }
+};
+
+export const getProfiles = async (req, res, next) => {
+  try {
+    const profiles = await ProfileModel.find().populate('user', '-password');
+    if (!profiles) {
+      return res.status(404).send({
+        statusCode: 404,
+        status: 'fail',
+        payload: null,
+      });
+    }
+
+    return res.status(200).send({
+      statusCode: 200,
+      status: 'success',
+      payload: profiles,
     });
   } catch (err) {
     return next(err, req, res, next);
