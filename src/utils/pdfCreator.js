@@ -10,27 +10,8 @@ async function createPdf(options, html, pdfPath) {
   });
 }
 
-export async function generateAssetFinanceCertificate({
-  fullName,
-  amountPaid,
-  itemPrice,
-  startDate,
-  endDate,
-  duration,
-  asset,
-  seller,
-}) {
-  const html = generateHtml({
-    fullName,
-    amountPaid,
-    itemPrice,
-    startDate,
-    endDate,
-    duration,
-    asset,
-    seller,
-  });
-
+export async function generateAssetFinanceCertificate(data) {
+  const html = generateHtml(data);
   const res = await createPdf(
     { format: 'Letter', orientation: 'landscape' },
     html,

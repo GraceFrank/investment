@@ -6,7 +6,7 @@ module.exports = ({
   endDate,
   duration,
   asset,
-  seller,
+  vendor,
 }) => `<html>
   <head>
     <style>
@@ -74,7 +74,7 @@ module.exports = ({
           <p>
             This confirms your payment with Abudanza as an investor. The sum of
             ${amountPaid} Naira was paid for Asset Finance plan to get
-            <strong>${asset}</strong> from ${seller} at the end of
+            <strong>${asset}</strong> from ${vendor} at the end of
             ${duration} days with start date from <strong>${startDate}</strong> to
             <strong>${endDate}</strong> with total Item cost of
             <strong>${itemPrice} Naira</strong>
