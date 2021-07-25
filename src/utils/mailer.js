@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import Mailgun from 'mailgun-js';
 import capitalize from './Capitalize';
+import { getApprovalText, getDeclineText } from './Email/assetFinacesApproval';
 
 dotenv.config();
 
@@ -115,7 +116,7 @@ export const sendUserInvestmentNotification = (email, name) => {
 export const sendAdminInvestmentNotification = (emails, investmentId) => {
   const data = {
     from: 'Abudanza <support@mg.abudanza.africa>',
-    to: emails,
+    to: emails.join(', '),
     subject: 'New Investment Notification',
     template: 'investment_creation_admin',
     'h:X-Mailgun-Variables': JSON.stringify({
@@ -124,6 +125,40 @@ export const sendAdminInvestmentNotification = (emails, investmentId) => {
   };
 
   return mailer.messages().send(data, (error, body) => {
+    if (error) return Promise.reject(error);
+    return Promise.resolve(body);
+  });
+};
+
+export const sendAssetFinanceCertificate = (data) => {
+  const generateText = data.status === 'approved' ? getApprovalText : getDeclineText;
+  const text = generateText({
+    amountPaid: data.amountPaid,
+    itemPrice: data.itemPrice,
+    startDate: data.startDate,
+    endDate: data.endDate,
+    duration: data.duration,
+    asset: data.asset,
+    vendor: data.vendor,
+    reason: data.reason,
+  });
+  console.log(
+    data.attachment.filename
+      === '/Users/gracefrannk/DEV/projects/investment/assetFinanceCertificate.pdf', data.attachment
+  );
+  const mailDetails = {
+    from: 'Abudanza <support@mg.abudanza.africa>',
+    to: data.email,
+    subject: 'Thank you for Asset Finance',
+    template: 'asset_finance_approval',
+    attachment: data.attachment.filename,
+    'h:X-Mailgun-Variables': JSON.stringify({
+      name: data.fullName,
+      text,
+    }),
+  };
+
+  return mailer.messages().send(mailDetails, (error, body) => {
     if (error) return Promise.reject(error);
     return Promise.resolve(body);
   });
