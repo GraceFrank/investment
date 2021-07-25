@@ -1,12 +1,11 @@
 module.exports = ({
   fullName,
   amountPaid,
-  itemPrice,
+  amountDue,
   startDate,
   endDate,
   duration,
-  asset,
-  vendor,
+  interestRate,
 }) => `<html>
   <head>
     <style>
@@ -67,18 +66,15 @@ module.exports = ({
               src="https://res.cloudinary.com/gracefrank/image/upload/v1624467989/abudanza_public/ABUDANZA_LOGO_1_fxnydk.png"
             />
 
-            <h1>CERTIFICATE OF ASSET FINANCE</h1>
+            <h1>CERTIFICATE OF INVESTMENT</h1>
           </div>
           <h2><em>${fullName}</em></h2>
           <hr />
           <p>
             This confirms your payment with Abudanza as an investor. The sum of
-            ${amountPaid} Naira was paid for Asset Finance plan to get
-            <strong>${asset}</strong> from ${vendor} at the end of
-            ${duration} days with start date from <strong>${startDate}</strong> to
-            <strong>${endDate}</strong> with total Item cost of
-            <strong>${itemPrice} Naira</strong>
-
+            ${amountPaid} Naira was paid for investment Plan plan plan to get
+            a ${interestRate}% ROI at the end of${duration} days with start date from <strong>${startDate}</strong> to
+            <strong>${endDate}</strong> with total payable of   <strong>${amountDue} Naira</strong>
             (initial capital plus ROI)
           </p>
         </div>

@@ -28,7 +28,7 @@ export const assetFinanceSchema = Joi.object({
 }).required();
 
 export const approvalSchema = Joi.object({
-  status: Joi.string().valid('approved', 'declined').required().trim(),
+  status: Joi.string().valid('active', 'declined').required().trim(),
   decline_reason: Joi.string()
     .min(5)
     .max(255)

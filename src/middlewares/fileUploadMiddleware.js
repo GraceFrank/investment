@@ -12,6 +12,7 @@ const fileFilter = (req, file, cb) => {
   if (suportedFileTypes.includes(ext)) cb(null, true);
   else cb(new Error('File type is not supported'), false);
 };
+
 const imageFilter = (req, file, cb) => {
   const suportedFileTypes = [ '.jpg', '.jpeg', '.png' ];
   const ext = path.extname(file.originalname);

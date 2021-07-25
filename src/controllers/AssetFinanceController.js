@@ -106,6 +106,7 @@ export const updateAssets = async (req, res, next) => {
       req.body,
       {
         new: true,
+        runValidators: true,
       }
     );
 
@@ -159,6 +160,7 @@ export const approveAssetFinance = async (req, res, next) => {
       { ...req.body, activation_date: startDate, due_date: endDate },
       {
         new: true,
+        runValidators: true,
       }
     );
 
@@ -181,12 +183,12 @@ export const approveAssetFinance = async (req, res, next) => {
     let certificate;
     if (updatedAsset.status === 'approved') {
       certificate = await generateAssetFinanceCertificate(details);
+      details.attachment = certificate.filename
     }
 
     // send approval email
     sendAssetFinanceCertificate({
       ...details,
-      attachment: certificate,
       status: updatedAsset.status,
       email: req.user.email,
       reason: req.body.decline_reason,

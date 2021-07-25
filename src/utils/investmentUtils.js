@@ -1,11 +1,12 @@
-const INTEREST_RATES = {
-  90: 15 / 100,
-  180: 30 / 100,
-  365: 45 / 100,
+export const INTEREST_RATES = {
+  90: 15,
+  180: 30,
+  365: 45,
 };
 export function calculateAmountDue(duration, principal) {
   return (
-    Number(principal) + Number(INTEREST_RATES[duration]) * Number(principal)
+    Number(principal)
+    + Number(INTEREST_RATES[duration] / 100) * Number(principal)
   );
 }
 

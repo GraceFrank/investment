@@ -2,6 +2,10 @@ import dotenv from 'dotenv';
 import Mailgun from 'mailgun-js';
 import capitalize from './Capitalize';
 import { getApprovalText, getDeclineText } from './emails/assetFinacesApproval';
+import {
+  getInvestmentApprovalText,
+  getInvestmentDeclineText,
+} from './emails/investmentApproval';
 
 dotenv.config();
 
@@ -131,17 +135,8 @@ export const sendAdminInvestmentNotification = (emails, investmentId) => {
 };
 
 export const sendAssetFinanceCertificate = (data) => {
-  const generateText = data.status === 'approved' ? getApprovalText : getDeclineText;
-  const text = generateText({
-    amountPaid: data.amountPaid,
-    itemPrice: data.itemPrice,
-    startDate: data.startDate,
-    endDate: data.endDate,
-    duration: data.duration,
-    asset: data.asset,
-    vendor: data.vendor,
-    reason: data.reason,
-  });
+  const generateText = data.status === 'active' ? getApprovalText : getDeclineText;
+  const text = generateText(data);
   const mailDetails = {
     from: 'Abudanza <support@mg.abudanza.africa>',
     to: data.email,
@@ -151,9 +146,33 @@ export const sendAssetFinanceCertificate = (data) => {
     'h:X-Mailgun-Variables': JSON.stringify({
       name: data.fullName,
       text,
+      loginUrl: `${UI_BASE_URL}/login/`,
     }),
   };
 
+  return mailer.messages().send(mailDetails, (error, body) => {
+    if (error) return Promise.reject(error);
+    return Promise.resolve(body);
+  });
+};
+
+export const sendInvestmentCertificate = (data) => {
+  const generateText = data.status === 'active'
+    ? getInvestmentApprovalText
+    : getInvestmentDeclineText;
+  const text = generateText(data);
+  const mailDetails = {
+    from: 'Abudanza <support@mg.abudanza.africa>',
+    to: data.email,
+    subject: 'Thank you for Asset Finance',
+    template: 'asset_finance_approval',
+    attachment: data.attachment,
+    'h:X-Mailgun-Variables': JSON.stringify({
+      name: data.fullName,
+      text,
+      loginUrl: `${UI_BASE_URL}/login/`,
+    }),
+  };
   return mailer.messages().send(mailDetails, (error, body) => {
     if (error) return Promise.reject(error);
     return Promise.resolve(body);

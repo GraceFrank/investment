@@ -1,14 +1,30 @@
 import InvestmentModel from '../models/InvestmentModel';
+import AppError from '../utils/appError';
 import cloudinary from '../utils/cloudinary';
 import { generateFileName } from '../utils/generateFileName';
-import { calculateAmountDue } from '../utils/investmentUtils';
-import { sendUserInvestmentNotification } from '../utils/mailer';
+import {
+  calculateAmountDue,
+  getDueDate,
+  INTEREST_RATES,
+} from '../utils/investmentUtils';
+import {
+  sendInvestmentCertificate,
+  sendUserInvestmentNotification,
+} from '../utils/mailer';
+import { generateInvestmentCertificate } from '../utils/pdfCreator';
 
 const { CLOUDINARY_BASE_PATH } = process.env;
 
 export const createInvestment = async (req, res, next) => {
   try {
     const { _id: userId, email } = req.user;
+    if (!req.file) {
+      return res.status(400).send({
+        statusCode: 400,
+        status: 'Error',
+        message: 'File paymentProof isrequired',
+      });
+    }
     const uploadedPaymentProof = await cloudinary.uploader.upload(
       req.file.path,
       {
@@ -25,6 +41,7 @@ export const createInvestment = async (req, res, next) => {
       ...req.body,
       user: userId,
       amount_due: amountDue,
+      interest_rate: INTEREST_RATES[req.body.duration],
       payment_proof: {
         url: uploadedPaymentProof.secure_url,
         public_id: uploadedPaymentProof.public_id,
@@ -69,6 +86,113 @@ export const getUserInvestments = async (req, res, next) => {
         totalContribution,
         investments,
       },
+    });
+  } catch (err) {
+    return next(err, req, res, next);
+  }
+};
+
+export const getAllInvestments = async (req, res, next) => {
+  try {
+    const { status, page } = req.query;
+    if (
+      status
+      && ![ 'active', 'declined', 'pending', 'completed' ].includes(status)
+    ) {
+      const error = new AppError(400, 'fail', 'invalid status');
+      return next(error, req, res, next);
+    }
+    const search = status ? { status } : {};
+    const pageNumber = page ? Number(page) - 1 : 0;
+    const investments = await InvestmentModel.find(search)
+      .limit(30)
+      .skip(30 * pageNumber);
+    // .sort({ createdAt: 'desc' });
+    return res.status(200).send({
+      statusCode: 200,
+      status: 'success',
+      payload: investments,
+    });
+  } catch (err) {
+    return next(err, req, res, next);
+  }
+};
+
+export const activateInvestment = async (req, res, next) => {
+  try {
+    const investment = await InvestmentModel.findById(req.params.id);
+    if (!investment) {
+      const error = new AppError(404, 'fail', 'Investment not found');
+      return next(error, req, res, next);
+    }
+    const startDate = Date.now();
+    const endDate = getDueDate(startDate, investment.duration);
+    const updatedInvestment = await InvestmentModel.findByIdAndUpdate(
+     investment._id,
+      {
+        ...req.body,
+        activation_date: startDate,
+        due_date: endDate,
+      },
+      { runValidators: true, new: true }
+    );
+
+    const details = {
+      fullName: `${req.user.first_name}  ${req.user.last_name}`,
+      amountPaid: Number(updatedInvestment.amount_paid).toLocaleString(),
+      amountDue: Number(updatedInvestment.amount_due).toLocaleString(),
+      startDate: new Date(
+        updatedInvestment.activation_date
+      ).toLocaleDateString(),
+      endDate: new Date(updatedInvestment.due_date).toLocaleDateString(),
+      duration: updatedInvestment.duration,
+      interestRate: updatedInvestment.interest_rate,
+    };
+
+    // generate certificate if approved
+    let certificate;
+    if (updatedInvestment.status === 'active') {
+      certificate = await generateInvestmentCertificate(details);
+      details.attachment = certificate.filename
+    }
+    console.log(updateInvestment.status);
+    // send approval email
+    sendInvestmentCertificate({
+      ...details,
+      status: updatedInvestment.status,
+      email: req.user.email,
+      reason: req.body.decline_reason,
+    });
+
+    return res.status(200).send({
+      statusCode: 200,
+      status: 'success',
+      payload: updatedInvestment,
+    });
+  } catch (err) {
+    return next(err, req, res, next);
+  }
+};
+
+export const updateInvestment = async (req, res, next) => {
+  try {
+    const updatedInvestment = await InvestmentModel.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+      }
+    );
+
+    if (!updatedInvestment) {
+      const error = new AppError(404, 'fail', 'Investment not found');
+      return next(error, req, res, next);
+    }
+
+    return res.status(200).send({
+      statusCode: 200,
+      status: 'success',
+      payload: updatedInvestment,
     });
   } catch (err) {
     return next(err, req, res, next);

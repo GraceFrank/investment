@@ -15,7 +15,7 @@ const investmentSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: [ 'active', 'pending', 'completed' ],
+      enum: [ 'active', 'pending', 'completed' , 'declined'],
       required: 'true',
       default: 'pending',
     },
@@ -27,10 +27,25 @@ const investmentSchema = new mongoose.Schema(
       required: true,
     },
 
+    interest_rate: {
+      type: Number,
+      required: true,
+      min: 1,
+      max: 100,
+    },
+
     activation_date: {
       type: Date,
     },
-
+    due_date: {
+      type: Date,
+    },
+    decline_reason: {
+      type: String,
+      minlength: 2,
+      maxlength: 255,
+      trim: true,
+    },
     payment_proof: {
       url: {
         type: String,

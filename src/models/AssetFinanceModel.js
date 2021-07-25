@@ -44,7 +44,7 @@ const AssetFinanceSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: [ 'active', 'pending', 'completed' ],
+      enum: [ 'active', 'pending', 'completed', "declined" ],
       required: 'true',
       default: 'pending',
     },
