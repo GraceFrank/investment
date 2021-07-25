@@ -1,7 +1,13 @@
 import AssetFinanceModel from '../models/AssetFinanceModel';
 import cloudinary from '../utils/cloudinary';
 import { generateFileName } from '../utils/generateFileName';
-import { sendUserAssetCreationNotification } from '../utils/mailer';
+import {
+  sendAssetFinanceCertificate,
+  sendUserAssetCreationNotification,
+} from '../utils/mailer';
+import AppError from '../utils/appError';
+import { generateAssetFinanceCertificate } from '../utils/pdfCreator';
+import { getDueDate } from '../utils/investmentUtils';
 
 const { CLOUDINARY_BASE_PATH } = process.env;
 
@@ -87,6 +93,109 @@ export const getUserAssets = async (req, res, next) => {
         totalContribution,
         assets,
       },
+    });
+  } catch (err) {
+    return next(err, req, res, next);
+  }
+};
+
+export const updateAssets = async (req, res, next) => {
+  try {
+    const updatedAsset = await AssetFinanceModel.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+      }
+    );
+
+    if (!updatedAsset) {
+      const error = new AppError(404, 'fail', 'Asset not found');
+      return next(error, req, res, next);
+    }
+
+    return res.status(200).send({
+      statusCode: 200,
+      status: 'success',
+      payload: updatedAsset,
+    });
+  } catch (err) {
+    return next(err, req, res, next);
+  }
+};
+
+export const getAllAssets = async (req, res, next) => {
+  try {
+    const { status, page } = req.query;
+    if (
+      status
+      && ![ 'approved', 'declined', 'pending', 'completed' ].includes(status)
+    ) {
+      const error = new AppError(400, 'fail', 'invalid status');
+      return next(error, req, res, next);
+    }
+    const search = status ? { status } : {};
+    const pageNumber = page ? Number(page) - 1 : 0;
+    const assets = await AssetFinanceModel.find(search)
+      .limit(30)
+      .skip(30 * pageNumber);
+    // .sort({ createdAt: 'desc' });
+    return res.status(200).send({
+      statusCode: 200,
+      status: 'success',
+      payload: assets,
+    });
+  } catch (err) {
+    return next(err, req, res, next);
+  }
+};
+
+export const approveAssetFinance = async (req, res, next) => {
+  try {
+    const startDate = Date.now();
+    const endDate = getDueDate(startDate, 90);
+    const updatedAsset = await AssetFinanceModel.findByIdAndUpdate(
+      req.params.id,
+      { ...req.body, activation_date: startDate, due_date: endDate },
+      {
+        new: true,
+      }
+    );
+
+    if (!updatedAsset) {
+      const error = new AppError(404, 'fail', 'Asset not found');
+      return next(error, req, res, next);
+    }
+
+    const details = {
+      fullName: `${req.user.first_name}  ${req.user.last_name}`,
+      amountPaid: Number(updatedAsset.amount_paid).toLocaleString(),
+      itemPrice: Number(updatedAsset.cost).toLocaleString(),
+      startDate: new Date(updatedAsset.activation_date).toLocaleDateString(),
+      endDate: new Date(updatedAsset.due_date).toLocaleDateString(),
+      duration: updatedAsset.duration,
+      asset: `${updatedAsset.brand} ${updatedAsset.model} ${updatedAsset.category}`,
+      vendor: `${updatedAsset.vendor_name} ${updatedAsset.vendor_city} ${updatedAsset.vendor_state}`,
+    };
+    // generate certificate if approved
+    let certificate;
+    if (updatedAsset.status === 'approved') {
+      certificate = await generateAssetFinanceCertificate(details);
+    }
+
+    // send approval email
+    sendAssetFinanceCertificate({
+      ...details,
+      attachment: certificate,
+      status: updatedAsset.status,
+      email: req.user.email,
+      reason: req.body.decline_reason,
+    });
+
+    return res.status(200).send({
+      statusCode: 200,
+      status: 'success',
+      payload: updatedAsset,
     });
   } catch (err) {
     return next(err, req, res, next);

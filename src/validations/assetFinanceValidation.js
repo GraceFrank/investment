@@ -25,4 +25,17 @@ export const assetFinanceSchema = Joi.object({
     .trim(),
   vendor_country: Joi.string().required().min(1).max(255)
     .trim(),
-});
+}).required();
+
+export const approvalSchema = Joi.object({
+  status: Joi.string().valid('approved', 'declined').required().trim(),
+  decline_reason: Joi.string()
+    .min(5)
+    .max(255)
+    .trim()
+    .when('status', { is: 'declined', then: Joi.required() }),
+}).required();
+
+export const markAsPaidSchema = Joi.object({
+  paymentStatus: Joi.string().valid('paid', 'declined').required().trim(),
+}).required();

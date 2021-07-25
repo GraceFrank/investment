@@ -127,6 +127,12 @@ const AssetFinanceSchema = new mongoose.Schema(
         trim: true,
       },
     },
+    decline_reason: {
+      type: String,
+      minlength: 2,
+      maxlength: 255,
+      trim: true,
+    },
 
     proforma_invoice: {
       url: {
