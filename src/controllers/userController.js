@@ -55,7 +55,9 @@ export const updateUser = async (req, res, next) => {
 export const getAllUsers = async (req, res, next) => {
   const role = req.query.role || 'user';
   try {
-    const users = await UserModel.find({ role }).select('-password').sort({ first_name: 'asc' });
+    const users = await UserModel.find({ role })
+      .select('-password')
+      .sort({ first_name: 'asc' });
     return res.status(200).send({
       statusCode: 200,
       status: 'success',

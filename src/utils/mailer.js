@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import Mailgun from 'mailgun-js';
 import capitalize from './Capitalize';
-import { getApprovalText, getDeclineText } from './Email/assetFinacesApproval';
+import { getApprovalText, getDeclineText } from './emails/assetFinacesApproval';
 
 dotenv.config();
 
@@ -142,10 +142,6 @@ export const sendAssetFinanceCertificate = (data) => {
     vendor: data.vendor,
     reason: data.reason,
   });
-  console.log(
-    data.attachment.filename
-      === '/Users/gracefrannk/DEV/projects/investment/assetFinanceCertificate.pdf', data.attachment
-  );
   const mailDetails = {
     from: 'Abudanza <support@mg.abudanza.africa>',
     to: data.email,
