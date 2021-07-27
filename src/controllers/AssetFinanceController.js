@@ -183,7 +183,7 @@ export const approveAssetFinance = async (req, res, next) => {
     let certificate;
     if (updatedAsset.status === 'approved') {
       certificate = await generateAssetFinanceCertificate(details);
-      details.attachment = certificate.filename
+      details.attachment = certificate.filename;
     }
 
     // send approval email

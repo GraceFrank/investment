@@ -71,7 +71,7 @@ export const getNextOfKin = async (req, res, next) => {
       return res.status(404).send({
         statusCode: 404,
         status: 'fail',
-        payload: null,
+        message: "You have no Next of  Kin Record",
       });
     }
 

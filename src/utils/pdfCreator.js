@@ -5,7 +5,7 @@ import generateInvestmentHtml from './certificateGenerators/investmentCertificat
 async function createPdf(options, html, pdfPath) {
   return new Promise((resolve, reject) => {
     pdf.create(html, options).toFile(pdfPath, (err, res) => {
-  console.log('err', err);
+      console.log('err', err);
 
       if (err) reject(err);
       resolve(res);

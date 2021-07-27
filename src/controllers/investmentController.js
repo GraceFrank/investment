@@ -128,7 +128,7 @@ export const activateInvestment = async (req, res, next) => {
     const startDate = Date.now();
     const endDate = getDueDate(startDate, investment.duration);
     const updatedInvestment = await InvestmentModel.findByIdAndUpdate(
-     investment._id,
+      investment._id,
       {
         ...req.body,
         activation_date: startDate,
@@ -153,9 +153,8 @@ export const activateInvestment = async (req, res, next) => {
     let certificate;
     if (updatedInvestment.status === 'active') {
       certificate = await generateInvestmentCertificate(details);
-      details.attachment = certificate.filename
+      details.attachment = certificate.filename;
     }
-    console.log(updateInvestment.status);
     // send approval email
     sendInvestmentCertificate({
       ...details,

@@ -15,7 +15,7 @@ const investmentSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: [ 'active', 'pending', 'completed' , 'declined'],
+      enum: [ 'active', 'pending', 'completed', 'declined' ],
       required: 'true',
       default: 'pending',
     },
