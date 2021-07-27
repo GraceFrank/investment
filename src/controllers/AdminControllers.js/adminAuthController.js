@@ -23,6 +23,7 @@ export const adminLogin = async (req, res, next) => {
     return res.status(200).send({
       status: 'success',
       payload: {
+        role: user.role,
         firstName: user.first_name,
         lastName: user.last_name,
         email: user.email,

@@ -16,6 +16,7 @@ import {
   changePassword,
   resetPassword,
 } from '../controllers/authController';
+import {adminLogin} from '../controllers/AdminControllers.js/adminAuthController'
 import authenticateToken from '../middlewares/authenticate';
 
 const router = express.Router();
@@ -51,5 +52,7 @@ router.post(
   validationMiddleware(sendMailSchema),
   requestPasswordReset
 );
+
+router.post('/admin/login', validationMiddleware(loginSchema), adminLogin);
 
 export default router;

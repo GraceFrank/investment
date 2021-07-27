@@ -66,7 +66,7 @@ export const getBankDetails = async (req, res, next) => {
       return res.status(404).send({
         statusCode: 404,
         status: 'fail',
-        message: "You have no Bank Detail Record",
+        message: 'You have no Bank Detail Record',
       });
     }
 
