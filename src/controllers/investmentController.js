@@ -12,6 +12,7 @@ import {
   sendUserInvestmentNotification,
 } from '../utils/mailer';
 import { generateInvestmentCertificate } from '../utils/pdfCreator';
+import { AddReferralBonus } from './ReferralsController';
 
 const { CLOUDINARY_BASE_PATH } = process.env;
 
@@ -105,6 +106,8 @@ export const getAllInvestments = async (req, res, next) => {
     const search = status ? { status } : {};
     const pageNumber = page ? Number(page) - 1 : 0;
     const investments = await InvestmentModel.find(search)
+      .populate({ path: 'user', select: 'first_name last_name account_id' })
+
       .limit(30)
       .skip(30 * pageNumber);
     // .sort({ createdAt: 'desc' });
@@ -135,7 +138,11 @@ export const activateInvestment = async (req, res, next) => {
         due_date: endDate,
       },
       { runValidators: true, new: true }
-    );
+    ).populate('user', '_id');
+
+    if (req.body.status === 'active') {
+      AddReferralBonus(updatedInvestment.user._id);
+    }
 
     const details = {
       fullName: `${req.user.first_name}  ${req.user.last_name}`,

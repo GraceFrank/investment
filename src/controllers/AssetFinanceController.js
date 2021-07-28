@@ -8,6 +8,7 @@ import {
 import AppError from '../utils/appError';
 import { generateAssetFinanceCertificate } from '../utils/pdfCreator';
 import { getDueDate } from '../utils/investmentUtils';
+import { AddReferralBonus } from './ReferralsController';
 
 const { CLOUDINARY_BASE_PATH } = process.env;
 
@@ -138,6 +139,7 @@ export const getAllAssets = async (req, res, next) => {
     const search = status ? { status } : {};
     const pageNumber = page ? Number(page) - 1 : 0;
     const assets = await AssetFinanceModel.find(search)
+      .populate({ path: 'user', select: 'first_name last_name account_id' })
       .limit(30)
       .skip(30 * pageNumber);
     // .sort({ createdAt: 'desc' });
@@ -162,11 +164,15 @@ export const approveAssetFinance = async (req, res, next) => {
         new: true,
         runValidators: true,
       }
-    );
+    ).populate('user', '_id');
 
     if (!updatedAsset) {
       const error = new AppError(404, 'fail', 'Asset not found');
       return next(error, req, res, next);
+    }
+
+    if (req.body.status === 'active') {
+      AddReferralBonus(updateAssets.user._id);
     }
 
     const details = {
@@ -178,10 +184,11 @@ export const approveAssetFinance = async (req, res, next) => {
       duration: updatedAsset.duration,
       asset: `${updatedAsset.brand} ${updatedAsset.model} ${updatedAsset.category}`,
       vendor: `${updatedAsset.vendor_name} ${updatedAsset.vendor_city} ${updatedAsset.vendor_state}`,
+      attachment: '',
     };
     // generate certificate if approved
     let certificate;
-    if (updatedAsset.status === 'approved') {
+    if (updatedAsset.status === 'active') {
       certificate = await generateAssetFinanceCertificate(details);
       details.attachment = certificate.filename;
     }

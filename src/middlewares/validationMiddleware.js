@@ -1,6 +1,6 @@
-export default function validationMiddleware(JoiSchema, payload) {
+export default function validationMiddleware(JoiSchema, part) {
   return (req, res, next) => {
-    const { error } = JoiSchema.validate(payload || req.body);
+    const { error } = JoiSchema.validate(req[part] || req.body);
 
     if (error) {
       return res.status(400).send({

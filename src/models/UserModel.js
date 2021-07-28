@@ -60,7 +60,7 @@ const userSchema = new mongoose.Schema(
 
 userSchema.methods.generateToken = function (details) {
   const secret = process.env.PRIVATE_KEY;
-  const payload = details 
+  const payload = details
     ? details.data
     : { account_id: this.account_id, role: this.role, email: this.email };
   const expiresIn = details ? details.expires : '2d';

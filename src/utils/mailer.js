@@ -142,7 +142,7 @@ export const sendAssetFinanceCertificate = (data) => {
     to: data.email,
     subject: 'Thank you for Asset Finance',
     template: 'asset_finance_approval',
-    attachment: data.attachment.filename,
+    attachment: data.attachment,
     'h:X-Mailgun-Variables': JSON.stringify({
       name: data.fullName,
       text,
