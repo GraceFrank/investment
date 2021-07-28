@@ -26,6 +26,7 @@ router.post(
   validationMiddleware(signupSchema),
   createAdminUser
 );
+
 router.put(
   '/:id/change-password',
   authenticateToken,
@@ -33,5 +34,7 @@ router.put(
   validationMiddleware(forgotPasswordSchema),
   updateUser
 );
+
+
 
 export default router;

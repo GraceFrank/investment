@@ -186,7 +186,7 @@ export const updateInvestment = async (req, res, next) => {
       req.params.id,
       req.body,
       {
-        new: true,
+        new: true, runValidators: true
       }
     );
 

@@ -33,7 +33,20 @@ const profileSchema = new mongoose.Schema(
       maxlength: 255,
     },
     photo_url: { type: String, minlength: 7, maxlength: 255 },
-    id_card_url: { type: String, minlength: 7, maxlength: 255 },
+    id_card: {
+      url: {
+        type: String,
+        maxlength: 500,
+        trim: true,
+      },
+
+      public_id: {
+        type: String,
+        minlength: 2,
+        maxlength: 255,
+        trim: true,
+      },
+    },
     id_type: {
       type: String,
       enum: [ 'voters_card', 'drivers_licence', 'NIN', 'passport' ],

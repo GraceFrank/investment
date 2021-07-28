@@ -1,5 +1,9 @@
 import ProfileModel from '../models/ProfileModel';
 import AppError from '../utils/appError';
+import cloudinary from '../utils/cloudinary';
+import { generateFileName } from '../utils/generateFileName';
+
+const { CLOUDINARY_BASE_PATH } = process.env;
 
 export const createProfile = async (req, res, next) => {
   const { _id: userId } = req.user;
@@ -96,6 +100,53 @@ export const getProfiles = async (req, res, next) => {
       payload: profiles,
     });
   } catch (err) {
+    return next(err, req, res, next);
+  }
+};
+
+export const uploadIdCard = async (req, res, next) => {
+
+  //Todo! do not upload file until  profile is found
+  try {
+    const { _id: userId } = req.user;
+    if (!req.file) {
+      return res.status(400).send({
+        statusCode: 400,
+        status: 'Error',
+        message: 'File idCard isrequired',
+      });
+    }
+    const uploadedIdCard = await cloudinary.uploader.upload(
+      req.file.path,
+      {
+        public_id: `${CLOUDINARY_BASE_PATH}/identification/${generateFileName(
+          userId
+        )}`,
+      }
+    );
+    const updatedProfile = await ProfileModel.findOneAndUpdate(
+      { user: userId },
+      {
+        ...req.body,
+        id_card: {
+          url: uploadedIdCard.secure_url,
+          public_id: uploadedIdCard.public_id,
+        },
+      }, 
+      { new: true, runValidators: true}
+    );
+    if (!updatedProfile) {
+      const error = new AppError(404, 'fail', 'Create Profile First');
+      return next(error, req, res, next);
+    }
+
+    return res.status(200).send({
+      statusCode: 200,
+      status: 'Updated',
+      payload: updatedProfile,
+    });
+  } catch (err) {
+    console.log('ERRr', err);
     return next(err, req, res, next);
   }
 };

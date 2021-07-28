@@ -3,12 +3,15 @@ import validationMiddleware from '../middlewares/validationMiddleware';
 import {
   profileSchema,
   approveProfileSchema,
+  uploadIdCardValidation,
 } from '../validations/ProfileValidation';
+import { uploadFile } from '../middlewares/fileUploadMiddleware';
 import {
   getProfile,
   createProfile,
   updateProfile,
   getProfiles,
+  uploadIdCard,
 } from '../controllers/profileController';
 import authenticateToken from '../middlewares/authenticate';
 import validateId from '../middlewares/validateIdMiddleware';
@@ -29,6 +32,14 @@ router.put(
   validationMiddleware(profileSchema),
   updateProfile
 );
+router.put(
+  '/upload',
+  authenticateToken,
+  uploadFile.single('idCard'),
+  validationMiddleware(uploadIdCardValidation),
+  uploadIdCard
+);
+
 // APPROVE OR DECLINE PROFILE
 router.put(
   '/:id',

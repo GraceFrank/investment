@@ -7,6 +7,7 @@ import {
   getUserInvestments,
   getAllInvestments,
   activateInvestment,
+  updateInvestment,
 } from '../controllers/investmentController';
 import { uploadFile } from '../middlewares/fileUploadMiddleware';
 import authorize from '../middlewares/authorize';
@@ -41,7 +42,7 @@ router.put(
   validationMiddleware(markAsPaidSchema),
   authenticateToken,
   authorize,
-  validateId
+  validateId, updateInvestment
 );
 
 export default router;
